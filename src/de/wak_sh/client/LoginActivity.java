@@ -2,6 +2,7 @@ package de.wak_sh.client;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import de.wak_sh.client.backend.DataService;
 
 public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
@@ -119,20 +121,22 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
+			DataService dataService = DataService.getInstance();
 
-			return false;
+			return dataService.login(mEmail, mPassword);
 		}
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
 			mAuthTask = null;
 			if (progressDialog != null && progressDialog.isShowing()) {
-				progressDialog.hide();
+				progressDialog.dismiss();
 			}
 
 			if (success) {
-				// TODO: save session.
+				Intent intent = new Intent(getApplicationContext(),
+						MainActivity.class);
+				startActivity(intent);
 				finish();
 			} else {
 				mPasswordView
