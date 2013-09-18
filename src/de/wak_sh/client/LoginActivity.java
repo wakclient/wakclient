@@ -1,5 +1,7 @@
 package de.wak_sh.client;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -123,7 +125,13 @@ public class LoginActivity extends Activity {
 		protected Boolean doInBackground(Void... params) {
 			DataService dataService = DataService.getInstance();
 
-			return dataService.login(mEmail, mPassword);
+			try {
+				return dataService.login(mEmail, mPassword);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
 		}
 
 		@Override
