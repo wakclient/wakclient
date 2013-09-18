@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -32,10 +34,16 @@ public class LoginActivity extends Activity {
 
 		setContentView(R.layout.activity_login);
 
-		// Set up the login form.
-		mEmailView = (EditText) findViewById(R.id.email);
+		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
+		// Set up the login form.
+		mEmail = preferences.getString("email", null);
+		mEmailView = (EditText) findViewById(R.id.email);
+		mEmailView.setText(mEmail);
+
+		mPassword = preferences.getString("password", null);
 		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView.setText(mPassword);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
@@ -56,6 +64,10 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
+
+		if (mEmail != null && mPassword != null) {
+			attemptLogin();
+		}
 	}
 
 	/**
@@ -92,9 +104,8 @@ public class LoginActivity extends Activity {
 			focusView = mEmailView;
 			cancel = true;
 		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
+			mEmail = mEmail + "@berufsakademie-sh.de";
+			mEmailView.setText(mEmail);
 		}
 
 		if (cancel) {
@@ -142,6 +153,10 @@ public class LoginActivity extends Activity {
 			}
 
 			if (success) {
+				SharedPreferences preferences = LoginActivity.this
+						.getPreferences(Context.MODE_PRIVATE);
+				preferences.edit().putString("email", mEmail)
+						.putString("password", mPassword).commit();
 				Intent intent = new Intent(getApplicationContext(),
 						MainActivity.class);
 				startActivity(intent);
