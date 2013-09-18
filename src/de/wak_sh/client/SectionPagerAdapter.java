@@ -6,9 +6,9 @@ import java.util.List;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class SectionPagerAdapter extends FragmentPagerAdapter {
+public class SectionPagerAdapter extends FragmentStatePagerAdapter {
 	private List<Fragment> fragments;
 	private Context context;
 
