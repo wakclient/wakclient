@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -13,6 +14,8 @@ import de.wak_sh.client.fragments.NachrichtenFragment;
 import de.wak_sh.client.fragments.NotenFragment;
 
 public class MainActivity extends FragmentActivity {
+	public static final String ACTION_LOGOUT = "de.wak_sh.client.ACTION_LOGOUT";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,4 +47,22 @@ public class MainActivity extends FragmentActivity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_logout:
+			logout();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void logout() {
+		Intent intent = new Intent(this, LoginActivity.class);
+		intent.putExtra(ACTION_LOGOUT, "logout");
+		startActivity(intent);
+		finish();
+	}
 }

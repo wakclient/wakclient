@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">WAK-Client</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_logout">Abmelden</string>
     <string name="noten">Noten</string>
     <string name="nachrichten">Nachrichten</string>
 

@@ -35,13 +35,19 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+		Intent intent = getIntent();
+		if (intent.getExtras() != null
+				&& intent.getExtras().getString(MainActivity.ACTION_LOGOUT) != null) {
+			new UserLogoutTask().execute((Void) null);
+		} else {
+			mEmail = preferences.getString("email", null);
+			mPassword = preferences.getString("password", null);
+		}
 
 		// Set up the login form.
-		mEmail = preferences.getString("email", null);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
 
-		mPassword = preferences.getString("password", null);
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView.setText(mPassword);
 		mPasswordView
@@ -175,5 +181,40 @@ public class LoginActivity extends Activity {
 				progressDialog.hide();
 			}
 		}
+	}
+
+	public class UserLogoutTask extends AsyncTask<Void, Void, Void> {
+		private ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog = new ProgressDialog(LoginActivity.this);
+			progressDialog.setTitle(R.string.login_progress_signing_out);
+			progressDialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			DataService dataService = DataService.getInstance();
+
+			SharedPreferences preferences = LoginActivity.this
+					.getPreferences(Context.MODE_PRIVATE);
+			preferences.edit().clear().commit();
+
+			try {
+				dataService.logout();
+			} catch (IOException e) {
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void success) {
+			mAuthTask = null;
+			if (progressDialog != null && progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
+		}
+
 	}
 }

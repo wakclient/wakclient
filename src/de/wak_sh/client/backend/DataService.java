@@ -82,6 +82,10 @@ public class DataService {
 		return loggedIn;
 	}
 
+	public void logout() throws IOException {
+		get("/431.html");
+	}
+
 	private String execute(HttpUriRequest request) throws IOException {
 		HttpResponse response;
 		response = client.execute(request, httpContext);
