@@ -1,2 +1,10 @@
 * text=auto
+
 *.java text
+*.properties text
+*.txt text
+*.xml text
+LICENSE text
+
+*.png binary
+*.xcf binary
