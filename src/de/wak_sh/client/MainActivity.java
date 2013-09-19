@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.viewpagerindicator.TabPageIndicator;
 
 import de.wak_sh.client.backend.DataService;
+import de.wak_sh.client.fragments.BenutzerinfoFragment;
 import de.wak_sh.client.fragments.NachrichtenFragment;
 import de.wak_sh.client.fragments.NotenFragment;
 
@@ -31,6 +32,7 @@ public class MainActivity extends FragmentActivity {
 		SectionPagerAdapter pagerAdapter = new SectionPagerAdapter(
 				getSupportFragmentManager(), this);
 		pagerAdapter.addFragment(new NachrichtenFragment());
+		pagerAdapter.addFragment(new BenutzerinfoFragment());
 		pagerAdapter.addFragment(new NotenFragment());
 
 		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);

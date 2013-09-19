@@ -38,6 +38,8 @@ public class SectionPagerAdapter extends FragmentStatePagerAdapter {
 		case 0:
 			return context.getString(R.string.nachrichten);
 		case 1:
+			return context.getString(R.string.benutzerinfo);
+		case 2:
 			return context.getString(R.string.noten);
 		default:
 			return null;

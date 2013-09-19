@@ -5,6 +5,7 @@
     <string name="action_logout">Abmelden</string>
     <string name="noten">Noten</string>
     <string name="nachrichten">Nachrichten</string>
+    <string name="benutzerinfo">Benutzerinformationen</string>
     <string name="betreff">Betreff</string>
     <string name="von">Von</string>
     <string name="datum">Datum</string>
