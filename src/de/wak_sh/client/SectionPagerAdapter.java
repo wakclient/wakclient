@@ -36,9 +36,9 @@ public class SectionPagerAdapter extends FragmentStatePagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		switch (position) {
 		case 0:
-			return context.getString(R.string.nachrichten);
-		case 1:
 			return context.getString(R.string.benutzerinfo);
+		case 1:
+			return context.getString(R.string.nachrichten);
 		case 2:
 			return context.getString(R.string.noten);
 		default:

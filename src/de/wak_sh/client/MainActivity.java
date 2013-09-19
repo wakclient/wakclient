@@ -31,8 +31,8 @@ public class MainActivity extends FragmentActivity {
 
 		SectionPagerAdapter pagerAdapter = new SectionPagerAdapter(
 				getSupportFragmentManager(), this);
-		pagerAdapter.addFragment(new NachrichtenFragment());
 		pagerAdapter.addFragment(new BenutzerinfoFragment());
+		pagerAdapter.addFragment(new NachrichtenFragment());
 		pagerAdapter.addFragment(new NotenFragment());
 
 		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
