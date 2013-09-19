@@ -25,6 +25,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import android.net.http.AndroidHttpClient;
+import de.wak_sh.client.backend.model.UserInformation;
 
 public class DataService {
 	private static final String BASE_URL = "https://www.wak-sh.de";
@@ -44,6 +45,8 @@ public class DataService {
 
 	private boolean loggedIn;
 	private String sessionId;
+
+	private UserInformation userInformation;
 
 	private DataService() {
 		loggedIn = false;
@@ -84,6 +87,19 @@ public class DataService {
 
 	public void logout() throws IOException {
 		get("/431.html");
+	}
+
+	public UserInformation getUserInformation() {
+		if (userInformation == null) {
+			// TODO: fetch user info
+			String benutzername = "Max Mustermann";
+			String studiengang = "Winformatik";
+			String studiengruppe = "BA123WINF7";
+			String matrikelnummer = "12345";
+			userInformation = new UserInformation(benutzername, studiengang,
+					studiengruppe, matrikelnummer);
+		}
+		return userInformation;
 	}
 
 	private String execute(HttpUriRequest request) throws IOException {
