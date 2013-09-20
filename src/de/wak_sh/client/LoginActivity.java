@@ -3,11 +3,9 @@ package de.wak_sh.client;
 import java.io.IOException;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -16,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import de.wak_sh.client.backend.DataService;
+import de.wak_sh.client.backend.ProgressDialogTask;
 
 public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
@@ -128,14 +127,10 @@ public class LoginActivity extends Activity {
 	/**
 	 * Represents an asynchronous login task used to authenticate the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		private ProgressDialog progressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(LoginActivity.this);
-			progressDialog.setTitle(R.string.login_progress_signing_in);
-			progressDialog.show();
+	public class UserLoginTask extends ProgressDialogTask<Void, Boolean> {
+		public UserLoginTask() {
+			super(LoginActivity.this,
+					getString(R.string.login_progress_signing_in));
 		}
 
 		@Override
@@ -153,14 +148,11 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
+			super.onPostExecute(success);
 			mAuthTask = null;
-			if (progressDialog != null && progressDialog.isShowing()) {
-				progressDialog.dismiss();
-			}
 
 			if (success) {
-				SharedPreferences preferences = LoginActivity.this
-						.getPreferences(Context.MODE_PRIVATE);
+				SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
 				preferences.edit().putString("email", mEmail)
 						.putString("password", mPassword).commit();
 				Intent intent = new Intent(getApplicationContext(),
@@ -176,29 +168,22 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected void onCancelled() {
+			super.onCancelled();
 			mAuthTask = null;
-			if (progressDialog != null && progressDialog.isShowing()) {
-				progressDialog.hide();
-			}
 		}
 	}
 
-	public class UserLogoutTask extends AsyncTask<Void, Void, Void> {
-		private ProgressDialog progressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(LoginActivity.this);
-			progressDialog.setTitle(R.string.login_progress_signing_out);
-			progressDialog.show();
+	public class UserLogoutTask extends ProgressDialogTask<Void, Void> {
+		public UserLogoutTask() {
+			super(LoginActivity.this,
+					getString(R.string.login_progress_signing_out));
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
 			DataService dataService = DataService.getInstance();
 
-			SharedPreferences preferences = LoginActivity.this
-					.getPreferences(Context.MODE_PRIVATE);
+			SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
 			preferences.edit().clear().commit();
 
 			try {
@@ -207,14 +192,5 @@ public class LoginActivity extends Activity {
 			}
 			return null;
 		}
-
-		@Override
-		protected void onPostExecute(Void success) {
-			mAuthTask = null;
-			if (progressDialog != null && progressDialog.isShowing()) {
-				progressDialog.dismiss();
-			}
-		}
-
 	}
 }
