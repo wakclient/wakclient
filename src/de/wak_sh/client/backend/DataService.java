@@ -80,9 +80,20 @@ public class DataService {
 		parameters.add(new BasicNameValuePair("redirect_url", ""));
 		parameters.add(new BasicNameValuePair("challenge", challenge));
 		String response = post("/community-login.html", parameters);
+		fetchUserInfo(response);
 		loggedIn = !(response.contains("Anmeldefehler") || response
 				.contains("gesperrt"));
 		return loggedIn;
+	}
+
+	private void fetchUserInfo(String response) {
+		// TODO: fetch user info
+		String benutzername = "Max Mustermann";
+		String studiengang = "Winformatik";
+		String studiengruppe = "BA123WINF7";
+		String matrikelnummer = "12345";
+		userInformation = new UserInformation(benutzername, studiengang,
+				studiengruppe, matrikelnummer);
 	}
 
 	public void logout() throws IOException {
@@ -90,15 +101,6 @@ public class DataService {
 	}
 
 	public UserInformation getUserInformation() {
-		if (userInformation == null) {
-			// TODO: fetch user info
-			String benutzername = "Max Mustermann";
-			String studiengang = "Winformatik";
-			String studiengruppe = "BA123WINF7";
-			String matrikelnummer = "12345";
-			userInformation = new UserInformation(benutzername, studiengang,
-					studiengruppe, matrikelnummer);
-		}
 		return userInformation;
 	}
 

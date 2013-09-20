@@ -11,14 +11,15 @@ import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.backend.model.UserInformation;
 
 public class BenutzerinfoFragment extends Fragment {
+	private UserInformation userInformation;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_benutzerinfo,
 				container, false);
 
-		UserInformation userInformation = DataService.getInstance()
-				.getUserInformation();
+		userInformation = DataService.getInstance().getUserInformation();
 
 		TextView benutzername = (TextView) rootView
 				.findViewById(R.id.text_benutzername);

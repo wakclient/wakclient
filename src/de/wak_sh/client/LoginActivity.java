@@ -37,7 +37,7 @@ public class LoginActivity extends Activity {
 		Intent intent = getIntent();
 		if (intent.getExtras() != null
 				&& intent.getExtras().getString(MainActivity.ACTION_LOGOUT) != null) {
-			new UserLogoutTask().execute((Void) null);
+			new UserLogoutTask().execute();
 		} else {
 			mEmail = preferences.getString("email", null);
 			mPassword = preferences.getString("password", null);
@@ -120,7 +120,7 @@ public class LoginActivity extends Activity {
 		} else {
 			// Kick off a background task to perform the user login attempt.
 			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+			mAuthTask.execute();
 		}
 	}
 

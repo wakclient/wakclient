@@ -59,8 +59,6 @@ public class MainActivity extends FragmentActivity {
 		TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.pager_indicator);
 		indicator.setOnPageChangeListener(onPageChangeListener);
 		indicator.setViewPager(viewPager);
-
-		onPageChangeListener.onPageSelected(viewPager.getCurrentItem());
 	}
 
 	@Override
