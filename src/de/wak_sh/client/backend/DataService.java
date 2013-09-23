@@ -24,8 +24,11 @@ import org.apache.http.util.EntityUtils;
 
 import android.net.http.AndroidHttpClient;
 import de.wak_sh.client.Utils;
-import de.wak_sh.client.backend.model.UserInformation;
 
+/*
+ * Parts of this file are based on the work of Patrick Gotthard:
+ * http://www.patrick-gotthard.de/4659/wakclient
+ */
 public class DataService {
 	private static final String BASE_URL = "https://www.wak-sh.de";
 
@@ -48,7 +51,10 @@ public class DataService {
 	private boolean loggedIn;
 	private String sessionId;
 
-	private UserInformation userInformation;
+	private String overviewPage;
+	private String newsPage;
+	private String fileDepotPage;
+	private String gradesPage;
 
 	private DataService() {
 		loggedIn = false;
@@ -88,41 +94,11 @@ public class DataService {
 		String response = post("/community-login.html", parameters);
 		loggedIn = !(response.contains("Anmeldefehler") || response
 				.contains("gesperrt"));
-		if (loggedIn) {
-			fetchUserInfo();
-		}
 		return loggedIn;
-	}
-
-	private void fetchUserInfo() throws IOException {
-		String benutzername = Utils.match("<b>Hallo&nbsp;(.*?)!</b>",
-				fetchPage("/c_uebersicht.html")).replaceAll("&nbsp;", " ");
-
-		String studiengruppe = Utils.match("<a.*?>(BA.*?)</a>",
-				fetchPage("/c_dateiablage.html"));
-
-		String studiengang;
-		if (studiengruppe.contains("WINF")) {
-			studiengang = "Wirtschaftsinformatik";
-		} else if (studiengruppe.contains("WING")) {
-			studiengang = "Wirtschaftsingenieurwesen";
-		} else {
-			studiengang = "Betriebswirtschaft";
-		}
-
-		String matrikelnummer = Utils.match(
-				"<td>Studierendennummer: (.*?) </td>", getGradesPage());
-
-		userInformation = new UserInformation(benutzername, studiengang,
-				studiengruppe, matrikelnummer);
 	}
 
 	public void logout() throws IOException {
 		get("/431.html");
-	}
-
-	public UserInformation getUserInformation() {
-		return userInformation;
 	}
 
 	private String execute(HttpUriRequest request) throws IOException {
@@ -182,7 +158,35 @@ public class DataService {
 		return page;
 	}
 
+	public String getOverviewPage() throws IOException {
+		if (overviewPage == null) {
+			overviewPage = fetchPage("/c_uebersicht.html");
+		}
+		return overviewPage;
+	}
+
+	public String getNewsPage() throws IOException {
+		if (newsPage == null) {
+			newsPage = fetchPage("/c_email.html");
+		}
+		return newsPage;
+	}
+
+	public String getFileDepotPage() throws IOException {
+		if (fileDepotPage == null) {
+			fileDepotPage = fetchPage("/c_dateiablage.html");
+		}
+		return fileDepotPage;
+	}
+
 	public String getGradesPage() throws IOException {
+		if (gradesPage == null) {
+			gradesPage = fetchGradesPage();
+		}
+		return gradesPage;
+	}
+
+	private String fetchGradesPage() throws IOException {
 		String notenAnmeldung = fetchPage("/notenabfrage_bc.html");
 		String id = Utils.match(
 				"<input type=\"hidden\" name=\"id\" value=\"(.*?)\">",

@@ -23,7 +23,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.fragments.BenutzerinfoFragment;
-import de.wak_sh.client.fragments.DataFragment;
 import de.wak_sh.client.fragments.NachrichtenFragment;
 import de.wak_sh.client.fragments.NotenFragment;
 
@@ -155,10 +154,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		setTitle(mTitles.get(position));
 		mDrawerLayout.closeDrawer(mDrawerList);
-
-		if (fragment instanceof DataFragment) {
-			((DataFragment) fragment).fetchData();
-		}
 	}
 
 }
