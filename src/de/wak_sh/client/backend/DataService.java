@@ -62,7 +62,7 @@ public class DataService {
 
 	public boolean login(String email, String password) throws IOException {
 		this.email = email;
-		this.password = md5(password);
+		this.password = password;
 		return doLogin();
 	}
 
@@ -74,7 +74,7 @@ public class DataService {
 			challenge = Utils.match(regex, response);
 		}
 
-		String passphrase = md5(String.format("%s:%s:%s", email, password,
+		String passphrase = md5(String.format("%s:%s:%s", email, md5(password),
 				challenge));
 
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
@@ -110,8 +110,8 @@ public class DataService {
 			studiengang = "Betriebswirtschaft";
 		}
 
-		// TODO: fetch matrikelnummer
-		String matrikelnummer = "12345";
+		String matrikelnummer = Utils.match(
+				"<td>Studierendennummer: (.*?) </td>", getGradesPage());
 
 		userInformation = new UserInformation(benutzername, studiengang,
 				studiengruppe, matrikelnummer);
@@ -178,6 +178,19 @@ public class DataService {
 			doLogin();
 			page = get(url);
 		}
+
 		return page;
 	}
+
+	public String getGradesPage() throws IOException {
+		String notenAnmeldung = fetchPage("/notenabfrage_bc.html");
+		String id = Utils.match(
+				"<input type=\"hidden\" name=\"id\" value=\"(.*?)\">",
+				notenAnmeldung);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("id", id));
+		params.add(new BasicNameValuePair("Passwort", password));
+		return post("/index.php", params);
+	}
+
 }
