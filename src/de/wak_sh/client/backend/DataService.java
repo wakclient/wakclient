@@ -5,8 +5,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,6 +23,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import android.net.http.AndroidHttpClient;
+import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.model.UserInformation;
 
 public class DataService {
@@ -63,9 +62,7 @@ public class DataService {
 		{
 			String response = get("/30.html");
 			String regex = "<input type=\"hidden\" name=\"challenge\" value=\"(.*?)\">";
-			Matcher matcher = Pattern.compile(regex).matcher(response);
-			matcher.find();
-			challenge = matcher.group(1);
+			challenge = Utils.match(regex, response);
 		}
 
 		String passphrase = md5(String.format("%s:%s:%s", email, md5(password),
