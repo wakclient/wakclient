@@ -42,6 +42,9 @@ public class DataService {
 	private CookieStore cookieStore;
 	private HttpContext httpContext;
 
+	private String email;
+	private String password;
+
 	private boolean loggedIn;
 	private String sessionId;
 
@@ -58,6 +61,12 @@ public class DataService {
 	}
 
 	public boolean login(String email, String password) throws IOException {
+		this.email = email;
+		this.password = md5(password);
+		return doLogin();
+	}
+
+	private boolean doLogin() throws IOException {
 		String challenge;
 		{
 			String response = get("/30.html");
@@ -65,7 +74,7 @@ public class DataService {
 			challenge = Utils.match(regex, response);
 		}
 
-		String passphrase = md5(String.format("%s:%s:%s", email, md5(password),
+		String passphrase = md5(String.format("%s:%s:%s", email, password,
 				challenge));
 
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
@@ -146,5 +155,14 @@ public class DataService {
 
 	public boolean isLoggedIn() {
 		return loggedIn;
+	}
+
+	private String fetchPage(final String url) throws IOException {
+		String page = get(url);
+		while (page.contains("Benutzeranmeldung")) {
+			doLogin();
+			page = get(url);
+		}
+		return page;
 	}
 }
