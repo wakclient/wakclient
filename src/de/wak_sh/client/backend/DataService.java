@@ -86,18 +86,33 @@ public class DataService {
 		parameters.add(new BasicNameValuePair("redirect_url", ""));
 		parameters.add(new BasicNameValuePair("challenge", challenge));
 		String response = post("/community-login.html", parameters);
-		fetchUserInfo(response);
 		loggedIn = !(response.contains("Anmeldefehler") || response
 				.contains("gesperrt"));
+		if (loggedIn) {
+			fetchUserInfo();
+		}
 		return loggedIn;
 	}
 
-	private void fetchUserInfo(String response) {
-		// TODO: fetch user info
-		String benutzername = "Max Mustermann";
-		String studiengang = "Winformatik";
-		String studiengruppe = "BA123WINF7";
+	private void fetchUserInfo() throws IOException {
+		String benutzername = Utils.match("<b>Hallo&nbsp;(.*?)!</b>",
+				fetchPage("/c_uebersicht.html")).replaceAll("&nbsp;", " ");
+
+		String studiengruppe = Utils.match("<a.*?>(BA.*?)</a>",
+				fetchPage("/c_dateiablage.html"));
+
+		String studiengang;
+		if (studiengruppe.contains("WINF")) {
+			studiengang = "Wirtschaftsinformatik";
+		} else if (studiengruppe.contains("WING")) {
+			studiengang = "Wirtschaftsingenieurwesen";
+		} else {
+			studiengang = "Betriebswirtschaft";
+		}
+
+		// TODO: fetch matrikelnummer
 		String matrikelnummer = "12345";
+
 		userInformation = new UserInformation(benutzername, studiengang,
 				studiengruppe, matrikelnummer);
 	}
@@ -157,7 +172,7 @@ public class DataService {
 		return loggedIn;
 	}
 
-	private String fetchPage(final String url) throws IOException {
+	private String fetchPage(String url) throws IOException {
 		String page = get(url);
 		while (page.contains("Benutzeranmeldung")) {
 			doLogin();
