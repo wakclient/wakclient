@@ -25,7 +25,8 @@ public class MessageArrayAdapter extends ArrayAdapter<Message> {
 		View view;
 
 		if (convertView == null) {
-			view = mInflater.inflate(R.layout.drawer_list_item, parent, false);
+			view = mInflater
+					.inflate(R.layout.messages_list_item, parent, false);
 		} else {
 			view = convertView;
 		}
