@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,9 +34,8 @@ public class NachrichtenFragment extends Fragment {
 		((TextView) header.findViewById(R.id.msg_subject))
 				.setText(R.string.betreff);
 
-		// listView = (ListView) rootView.findViewById(R.id.msg_listview);
 		listView = (ListView) rootView;
-		listView.addHeaderView(header);
+		// listView.addHeaderView(header);
 
 		return rootView;
 	}
@@ -46,13 +44,16 @@ public class NachrichtenFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (messages == null) {
-			new MessageTask(getActivity()).execute();
+			new MessageTask(activity).execute();
 		}
 	}
 
 	private class MessageTask extends ProgressDialogTask<Void, Void> {
-		public MessageTask(Context context) {
-			super(context, context.getString(R.string.fetching_messages));
+		private Activity activity;
+
+		public MessageTask(Activity activity) {
+			super(activity, activity.getString(R.string.fetching_messages));
+			this.activity = activity;
 		}
 
 		@Override
@@ -68,12 +69,12 @@ public class NachrichtenFragment extends Fragment {
 
 			messages = service.getMessages();
 
-			getActivity().runOnUiThread(new Runnable() {
+			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					MessageArrayAdapter adapter = new MessageArrayAdapter(
-							getActivity(), messages);
-					// listView.setAdapter(adapter);
+							activity, messages);
+					listView.setAdapter(adapter);
 				}
 			});
 
