@@ -8,6 +8,10 @@ import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.backend.model.Message;
 
+/*
+ * Parts of this file are based on the work of Patrick Gotthard:
+ * http://www.patrick-gotthard.de/4659/wakclient
+ */
 public class MessageService {
 	private static final String READL_URL = "/c_email.html?&action=getviewmessagessingle&msg_uid=";
 
@@ -20,9 +24,7 @@ public class MessageService {
 	}
 
 	public void fetchMessages() throws IOException {
-		String regex = "single&msg_uid=(\\d+)\">(.*?)<.*?<td>(.*?)</td>.*?<td>(.*?)&";
-		// String regex =
-		// "single&msg_uid=(.*?)\">(.*?)<.*?<td>(.*?)</td>.*?<td>(.*?)&.*?delete&msg_uid=(.*?)\">";
+		String regex = "single&msg_uid=(\\d+).*?\">(.*?)<.*?<td>(.*?)</td>.*?<td>(.*?)&";
 		List<String[]> nachrichten = Utils.matchAll(regex,
 				dataService.getMessagesPage());
 		for (String[] nachricht : nachrichten) {
