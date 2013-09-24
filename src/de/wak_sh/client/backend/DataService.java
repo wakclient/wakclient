@@ -116,7 +116,7 @@ public class DataService {
 		return EntityUtils.toString(response.getEntity());
 	}
 
-	private String get(String path) throws IOException {
+	public String get(String path) throws IOException {
 		return execute(new HttpGet(BASE_URL + path));
 	}
 
@@ -165,7 +165,7 @@ public class DataService {
 		return overviewPage;
 	}
 
-	public String getNewsPage() throws IOException {
+	public String getMessagesPage() throws IOException {
 		if (newsPage == null) {
 			newsPage = fetchPage("/c_email.html");
 		}

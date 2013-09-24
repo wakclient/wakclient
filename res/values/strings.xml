@@ -4,5 +4,6 @@
     <string name="app_name">WAK-Client</string>
     <string name="drawer_open">Menü öffnen</string>
     <string name="drawer_close">Menü schließen</string>
+    <string name="fetching_messages">Hole Nachrichten</string>
 
 </resources>
