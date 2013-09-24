@@ -26,8 +26,8 @@ public class NachrichtenFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_nachrichten,
 				container, false);
-		View header = inflater.inflate(R.layout.messages_list_item, container,
-				false);
+		View header = inflater
+				.inflate(R.layout.messages_list_item, null, false);
 
 		((TextView) header.findViewById(R.id.msg_date)).setText(R.string.datum);
 		((TextView) header.findViewById(R.id.msg_from)).setText(R.string.von);
@@ -35,7 +35,7 @@ public class NachrichtenFragment extends Fragment {
 				.setText(R.string.betreff);
 
 		listView = (ListView) rootView;
-		// listView.addHeaderView(header);
+		listView.addHeaderView(header);
 
 		return rootView;
 	}
