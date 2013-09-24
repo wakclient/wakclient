@@ -11,10 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.wak_sh.client.backend.DataService;
+import de.wak_sh.client.backend.NavigationDrawerAdapter;
 import de.wak_sh.client.fragments.BenutzerinfoFragment;
 import de.wak_sh.client.fragments.NachrichtenFragment;
 import de.wak_sh.client.fragments.NotenFragment;
@@ -29,7 +30,7 @@ import de.wak_sh.client.fragments.NotenFragment;
 public class MainActivity extends SherlockFragmentActivity {
 	public static final String ACTION_LOGOUT = "de.wak_sh.client.ACTION_LOGOUT";
 	private ListView mDrawerList;
-	private List<String> mTitles;
+	private SparseIntArray mTitles;
 	private List<Fragment> mFragments;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -55,10 +56,11 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		setContentView(R.layout.activity_main);
 
-		mTitles = new ArrayList<String>();
-		mTitles.add(getString(R.string.benutzerinfo));
-		mTitles.add(getString(R.string.nachrichten));
-		mTitles.add(getString(R.string.notenuebersicht));
+		mTitles = new SparseIntArray();
+		mTitles.put(R.string.benutzerinfo, android.R.drawable.ic_lock_lock);
+		mTitles.put(R.string.nachrichten, android.R.drawable.ic_delete);
+		mTitles.put(R.string.notenuebersicht,
+				android.R.drawable.ic_btn_speak_now);
 
 		mFragments = new ArrayList<Fragment>();
 		mFragments.add(new BenutzerinfoFragment());
@@ -68,8 +70,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, mTitles));
+		mDrawerList.setAdapter(new NavigationDrawerAdapter(this, mTitles));
 		mDrawerList.setOnItemClickListener(mDrawerClickListener);
 
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
@@ -152,7 +153,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		mDrawerList.setItemChecked(position, true);
 
-		setTitle(mTitles.get(position));
+		setTitle(mTitles.keyAt(position));
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
