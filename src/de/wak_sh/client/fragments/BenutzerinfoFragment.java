@@ -16,6 +16,7 @@ import de.wak_sh.client.backend.model.UserInformation;
 import de.wak_sh.client.backend.service.UserInformationService;
 
 public class BenutzerinfoFragment extends Fragment {
+	protected UserInformation userInformation;
 
 	private TextView benutzername;
 	private TextView studiengang;
@@ -41,15 +42,15 @@ public class BenutzerinfoFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		new UserInfoTask(activity).execute();
+		if (userInformation == null) {
+			new UserInfoTask(activity).execute();
+		}
 	}
 
 	private class UserInfoTask extends ProgressDialogTask<Void, Void> {
 		public UserInfoTask(Context context) {
 			super(context, context.getString(R.string.fetching_user_info));
 		}
-
-		UserInformation userInformation;
 
 		@Override
 		protected Void doInBackground(Void... params) {
