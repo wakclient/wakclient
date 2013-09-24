@@ -3,7 +3,6 @@ package de.wak_sh.client.fragments;
 import java.io.IOException;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,8 +47,11 @@ public class BenutzerinfoFragment extends Fragment {
 	}
 
 	private class UserInfoTask extends ProgressDialogTask<Void, Void> {
-		public UserInfoTask(Context context) {
-			super(context, context.getString(R.string.fetching_user_info));
+		private Activity activity;
+
+		public UserInfoTask(Activity activity) {
+			super(activity, activity.getString(R.string.fetching_user_info));
+			this.activity = activity;
 		}
 
 		@Override
@@ -63,7 +65,7 @@ public class BenutzerinfoFragment extends Fragment {
 				return null;
 			}
 
-			getActivity().runOnUiThread(new Runnable() {
+			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					benutzername.setText(userInformation.getBenutzername());
