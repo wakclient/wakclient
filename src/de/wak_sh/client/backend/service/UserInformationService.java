@@ -21,7 +21,7 @@ public class UserInformationService {
 	public UserInformation getUserInformation() throws IOException {
 		if (userInformation == null) {
 			userInformation = new UserInformation(getUsername(),
-					getStudyPath(), getStudyGroup(), getMatriculationNumber());
+					getStudyGroup(), getStudyPath(), getMatriculationNumber());
 		}
 		return userInformation;
 	}
