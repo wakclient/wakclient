@@ -57,10 +57,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		setContentView(R.layout.activity_main);
 
 		mTitles = new SparseIntArray();
-		mTitles.put(R.string.benutzerinfo, android.R.drawable.ic_lock_lock);
-		mTitles.put(R.string.nachrichten, android.R.drawable.ic_delete);
+		mTitles.put(R.string.benutzerinfo, R.drawable.ic_menu_home);
+		mTitles.put(R.string.nachrichten, android.R.drawable.sym_action_email);
 		mTitles.put(R.string.notenuebersicht,
-				android.R.drawable.ic_btn_speak_now);
+				android.R.drawable.ic_menu_info_details);
 
 		mFragments = new ArrayList<Fragment>();
 		mFragments.add(new BenutzerinfoFragment());
