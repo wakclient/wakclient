@@ -1,7 +1,8 @@
 package de.wak_sh.client.backend;
 
+import java.util.List;
+
 import android.content.Context;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,13 @@ import android.widget.TextView;
 import de.wak_sh.client.R;
 
 public class NavigationDrawerAdapter extends ArrayAdapter<String> {
-	private SparseIntArray mTitles;
-	private LayoutInflater mInflater;
+	private final List<NavigationDrawerItem> mItems;
+	private final LayoutInflater mInflater;
 
-	public NavigationDrawerAdapter(Context context, SparseIntArray titles) {
+	public NavigationDrawerAdapter(Context context,
+			List<NavigationDrawerItem> items) {
 		super(context, 0);
-		this.mTitles = titles;
+		this.mItems = items;
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -31,8 +33,8 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
 			view = (TextView) convertView;
 		}
 
-		int textId = mTitles.keyAt(position);
-		int imageId = mTitles.get(textId);
+		int textId = mItems.get(position).getTitleId();
+		int imageId = mItems.get(position).getIconId();
 
 		view.setText(textId);
 		view.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
@@ -42,6 +44,6 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
 
 	@Override
 	public int getCount() {
-		return mTitles.size();
+		return mItems.size();
 	}
 }

@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -23,6 +22,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.backend.NavigationDrawerAdapter;
+import de.wak_sh.client.backend.NavigationDrawerItem;
 import de.wak_sh.client.fragments.BenutzerinfoFragment;
 import de.wak_sh.client.fragments.NachrichtenFragment;
 import de.wak_sh.client.fragments.NotenFragment;
@@ -30,12 +30,11 @@ import de.wak_sh.client.fragments.NotenFragment;
 public class MainActivity extends SherlockFragmentActivity {
 	public static final String ACTION_LOGOUT = "de.wak_sh.client.ACTION_LOGOUT";
 	private ListView mDrawerList;
-	private SparseIntArray mTitles;
-	private List<Fragment> mFragments;
+	private List<NavigationDrawerItem> mDrawerItems;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	private OnItemClickListener mDrawerClickListener = new OnItemClickListener() {
+	private final OnItemClickListener mDrawerClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -56,21 +55,20 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		setContentView(R.layout.activity_main);
 
-		mTitles = new SparseIntArray();
-		mTitles.put(R.string.benutzerinfo, R.drawable.ic_menu_home);
-		mTitles.put(R.string.nachrichten, android.R.drawable.sym_action_email);
-		mTitles.put(R.string.notenuebersicht,
-				android.R.drawable.ic_menu_info_details);
-
-		mFragments = new ArrayList<Fragment>();
-		mFragments.add(new BenutzerinfoFragment());
-		mFragments.add(new NachrichtenFragment());
-		mFragments.add(new NotenFragment());
+		mDrawerItems = new ArrayList<NavigationDrawerItem>();
+		mDrawerItems.add(new NavigationDrawerItem(R.string.benutzerinfo,
+				R.drawable.ic_menu_home, new BenutzerinfoFragment()));
+		mDrawerItems
+				.add(new NavigationDrawerItem(R.string.nachrichten,
+						android.R.drawable.sym_action_email,
+						new NachrichtenFragment()));
+		mDrawerItems.add(new NavigationDrawerItem(R.string.notenuebersicht,
+				android.R.drawable.ic_menu_info_details, new NotenFragment()));
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		mDrawerList.setAdapter(new NavigationDrawerAdapter(this, mTitles));
+		mDrawerList.setAdapter(new NavigationDrawerAdapter(this, mDrawerItems));
 		mDrawerList.setOnItemClickListener(mDrawerClickListener);
 
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
@@ -145,7 +143,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	protected void selectItem(int position) {
-		Fragment fragment = mFragments.get(position);
+		Fragment fragment = mDrawerItems.get(position).getFragment();
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()
@@ -153,7 +151,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		mDrawerList.setItemChecked(position, true);
 
-		setTitle(mTitles.keyAt(position));
+		setTitle(mDrawerItems.get(position).getTitleId());
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
