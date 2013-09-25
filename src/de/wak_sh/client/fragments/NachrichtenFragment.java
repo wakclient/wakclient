@@ -6,9 +6,12 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import de.wak_sh.client.R;
@@ -20,6 +23,23 @@ import de.wak_sh.client.backend.service.MessageService;
 public class NachrichtenFragment extends Fragment {
 	protected List<Message> messages;
 	protected ListView listView;
+
+	private OnItemClickListener clickListener = new OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			Bundle bundle = new Bundle();
+			bundle.putInt("msgid", (int) id);
+
+			NachrichtLesenFragment fragment = new NachrichtLesenFragment();
+			fragment.setArguments(bundle);
+
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).addToBackStack(null)
+					.commit();
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +56,7 @@ public class NachrichtenFragment extends Fragment {
 
 		listView = (ListView) rootView;
 		listView.addHeaderView(header);
+		listView.setOnItemClickListener(clickListener);
 
 		return rootView;
 	}
@@ -58,7 +79,7 @@ public class NachrichtenFragment extends Fragment {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			MessageService service = new MessageService();
+			MessageService service = MessageService.getInstance();
 			try {
 				service.fetchMessages();
 			} catch (IOException e) {

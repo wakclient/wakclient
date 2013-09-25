@@ -13,12 +13,21 @@ import de.wak_sh.client.backend.model.Message;
  * http://www.patrick-gotthard.de/4659/wakclient
  */
 public class MessageService {
-	private static final String READL_URL = "/c_email.html?&action=getviewmessagessingle&msg_uid=";
+	private static final String READ_URL = "/c_email.html?&action=getviewmessagessingle&msg_uid=";
+
+	private static MessageService instance;
+
+	public static MessageService getInstance() {
+		if (instance == null) {
+			instance = new MessageService();
+		}
+		return instance;
+	}
 
 	private DataService dataService;
 	private List<Message> messages;
 
-	public MessageService() {
+	private MessageService() {
 		dataService = DataService.getInstance();
 		messages = new ArrayList<Message>();
 	}
@@ -36,18 +45,21 @@ public class MessageService {
 		}
 	}
 
-	public String getMessagesContent(int index) throws IOException {
+	public void fetchMessagesContent(int index) throws IOException {
 		Message message = messages.get(index);
 		if (message.getContent() == null) {
-			String readUrl = READL_URL + message.getId();
-			message.setContent(Utils.match(dataService.get(readUrl),
-					"Nachricht:.+?<td>(.*?)</td>"));
+			String readUrl = READ_URL + message.getId();
+			message.setContent(Utils.match("Nachricht:.+?<td>(.*?)</td>",
+					dataService.get(readUrl)));
 		}
-		return message.getContent();
 	}
 
 	public List<Message> getMessages() {
 		return messages;
+	}
+
+	public Message getMessage(int index) {
+		return messages.get(index);
 	}
 
 }

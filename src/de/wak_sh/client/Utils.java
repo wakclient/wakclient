@@ -9,8 +9,11 @@ public class Utils {
 	public static String match(String pattern, String subject) {
 		Matcher matcher = Pattern.compile(pattern, Pattern.DOTALL).matcher(
 				subject);
-		matcher.find();
-		return matcher.group(1);
+		if (matcher.find()) {
+			return matcher.group(1);
+		} else {
+			return null;
+		}
 	}
 
 	public static List<String[]> matchAll(String pattern, String subject) {

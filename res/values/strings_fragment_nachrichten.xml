@@ -4,5 +4,7 @@
     <string name="betreff">Betreff</string>
     <string name="von">Von</string>
     <string name="datum">Datum</string>
+    <string name="fetching_messages">Hole Nachrichten</string>
+    <string name="fetching_message">Hole Nachrichtentext</string>
 
 </resources>
