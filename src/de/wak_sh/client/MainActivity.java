@@ -24,6 +24,7 @@ import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.backend.NavigationDrawerAdapter;
 import de.wak_sh.client.backend.NavigationDrawerItem;
 import de.wak_sh.client.fragments.BenutzerinfoFragment;
+import de.wak_sh.client.fragments.DateiablageFragment;
 import de.wak_sh.client.fragments.NachrichtenFragment;
 import de.wak_sh.client.fragments.NotenFragment;
 
@@ -64,6 +65,8 @@ public class MainActivity extends SherlockFragmentActivity {
 						new NachrichtenFragment()));
 		mDrawerItems.add(new NavigationDrawerItem(R.string.notenuebersicht,
 				android.R.drawable.ic_menu_info_details, new NotenFragment()));
+		mDrawerItems.add(new NavigationDrawerItem(R.string.dateiablage,
+				R.drawable.ic_menu_archive, new DateiablageFragment()));
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
