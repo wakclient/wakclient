@@ -1,6 +1,7 @@
 package de.wak_sh.client.fragments;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -21,7 +22,7 @@ import de.wak_sh.client.backend.model.Message;
 import de.wak_sh.client.backend.service.MessageService;
 
 public class NachrichtenFragment extends Fragment {
-	protected List<Message> messages;
+	protected List<Message> messages = new ArrayList<Message>();
 	protected ListView listView;
 
 	private OnItemClickListener clickListener = new OnItemClickListener() {
@@ -40,6 +41,7 @@ public class NachrichtenFragment extends Fragment {
 					.commit();
 		}
 	};
+	private MessageArrayAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +59,8 @@ public class NachrichtenFragment extends Fragment {
 		listView = (ListView) rootView;
 		listView.addHeaderView(header);
 		listView.setOnItemClickListener(clickListener);
+		adapter = new MessageArrayAdapter(getActivity(), messages);
+		listView.setAdapter(adapter);
 
 		return rootView;
 	}
@@ -64,7 +68,7 @@ public class NachrichtenFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		if (messages == null) {
+		if (messages.isEmpty()) {
 			new MessageTask(activity).execute();
 		}
 	}
@@ -88,14 +92,12 @@ public class NachrichtenFragment extends Fragment {
 				return null;
 			}
 
-			messages = service.getMessages();
-
+			messages.clear();
+			messages.addAll(service.getMessages());
 			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					MessageArrayAdapter adapter = new MessageArrayAdapter(
-							activity, messages);
-					listView.setAdapter(adapter);
+					adapter.notifyDataSetChanged();
 				}
 			});
 

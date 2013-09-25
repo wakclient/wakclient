@@ -35,6 +35,10 @@ public class BenutzerinfoFragment extends Fragment {
 		matrikelnummer = (TextView) rootView
 				.findViewById(R.id.text_matrikelnummer);
 
+		if (userInformation != null) {
+			populateUi();
+		}
+
 		return rootView;
 	}
 
@@ -44,6 +48,13 @@ public class BenutzerinfoFragment extends Fragment {
 		if (userInformation == null) {
 			new UserInfoTask(activity).execute();
 		}
+	}
+
+	protected void populateUi() {
+		benutzername.setText(userInformation.getBenutzername());
+		studiengang.setText(userInformation.getStudiengang());
+		studiengruppe.setText(userInformation.getStudiengruppe());
+		matrikelnummer.setText(userInformation.getMatrikelnummer());
 	}
 
 	private class UserInfoTask extends ProgressDialogTask<Void, Void> {
@@ -68,10 +79,7 @@ public class BenutzerinfoFragment extends Fragment {
 			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					benutzername.setText(userInformation.getBenutzername());
-					studiengang.setText(userInformation.getStudiengang());
-					studiengruppe.setText(userInformation.getStudiengruppe());
-					matrikelnummer.setText(userInformation.getMatrikelnummer());
+					populateUi();
 				}
 			});
 
