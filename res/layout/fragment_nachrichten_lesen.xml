@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" 
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <TableRow
@@ -18,7 +17,7 @@
             android:id="@+id/msg_from"
             android:layout_width="50dip"
             android:layout_height="wrap_content"
-            android:layout_weight="0.38"/>
+            android:layout_weight="0.38" />
     </TableRow>
 
     <TableRow
@@ -29,7 +28,7 @@
             android:id="@+id/msg_subject"
             android:layout_width="60dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
     </TableRow>
 
     <TableRow

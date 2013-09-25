@@ -8,18 +8,28 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.model.Message;
 import de.wak_sh.client.backend.service.MessageService;
 
 public class NachrichtLesenFragment extends Fragment {
+	private TextView date;
+	private TextView from;
+	private TextView subject;
+	private TextView text;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_nachrichten_lesen,
 				container, false);
+
+		date = (TextView) rootView.findViewById(R.id.msg_date);
+		from = (TextView) rootView.findViewById(R.id.msg_from);
+		subject = (TextView) rootView.findViewById(R.id.msg_subject);
+		text = (TextView) rootView.findViewById(R.id.msg_text);
 
 		return rootView;
 	}
@@ -31,8 +41,10 @@ public class NachrichtLesenFragment extends Fragment {
 	}
 
 	protected void setMessage(Message message) {
-		Toast.makeText(getActivity(), message.getContent(), Toast.LENGTH_LONG)
-				.show();
+		date.setText(message.getDate());
+		from.setText(message.getSender());
+		subject.setText(message.getSubject());
+		text.setText(message.getContent());
 	}
 
 	private class MessageTask extends ProgressDialogTask<Integer, Message> {

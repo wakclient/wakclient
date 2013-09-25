@@ -48,9 +48,11 @@ public class MessageService {
 	public void fetchMessagesContent(int index) throws IOException {
 		Message message = messages.get(index);
 		if (message.getContent() == null) {
-			String readUrl = READ_URL + message.getId();
-			message.setContent(Utils.match("Nachricht:.+?<td>(.*?)</td>",
-					dataService.get(readUrl)));
+			String pattern = "Nachricht:.+?<td>(.*?)</td>";
+			String subject = dataService.get(READ_URL + message.getId());
+			String content = Utils.match(pattern, subject).replaceAll("<br />",
+					"");
+			message.setContent(content);
 		}
 	}
 
