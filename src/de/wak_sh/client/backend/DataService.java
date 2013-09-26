@@ -148,7 +148,7 @@ public class DataService {
 		return loggedIn;
 	}
 
-	private String fetchPage(String url) throws IOException {
+	public String fetchPage(String url) throws IOException {
 		String page = get(url);
 		while (page.contains("Benutzeranmeldung")) {
 			doLogin();
