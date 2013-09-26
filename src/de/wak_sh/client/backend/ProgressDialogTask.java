@@ -8,17 +8,17 @@ public abstract class ProgressDialogTask<Params, Result> extends
 		AsyncTask<Params, Void, Result> {
 	private ProgressDialog progressDialog;
 	private Context context;
-	private String title;
+	private String text;
 
-	public ProgressDialogTask(Context context, String title) {
+	public ProgressDialogTask(Context context, String text) {
 		this.context = context;
-		this.title = title;
+		this.text = text;
 	}
 
 	@Override
 	protected void onPreExecute() {
 		progressDialog = new ProgressDialog(context);
-		progressDialog.setTitle(title);
+		progressDialog.setMessage(text);
 		progressDialog.show();
 	}
 
