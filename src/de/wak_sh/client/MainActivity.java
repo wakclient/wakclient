@@ -64,7 +64,7 @@ public class MainActivity extends SherlockFragmentActivity {
 						android.R.drawable.sym_action_email,
 						new NachrichtenFragment()));
 		mDrawerItems.add(new NavigationDrawerItem(R.string.notenuebersicht,
-				android.R.drawable.ic_menu_info_details, new NotenFragment()));
+				R.drawable.ic_menu_mark, new NotenFragment()));
 		mDrawerItems.add(new NavigationDrawerItem(R.string.dateiablage,
 				R.drawable.ic_menu_archive, new DateiablageFragment()));
 
