@@ -116,7 +116,7 @@ public class DataService {
 		return EntityUtils.toString(response.getEntity());
 	}
 
-	public String get(String path) throws IOException {
+	private String get(String path) throws IOException {
 		return execute(new HttpGet(BASE_URL + path));
 	}
 

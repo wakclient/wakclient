@@ -49,7 +49,7 @@ public class MessageService {
 		Message message = messages.get(index);
 		if (message.getContent() == null) {
 			String pattern = "Nachricht:.+?<td>(.*?)</td>";
-			String subject = dataService.get(READ_URL + message.getId());
+			String subject = dataService.fetchPage(READ_URL + message.getId());
 			String content = Utils.match(pattern, subject).replaceAll("<br />",
 					"");
 			message.setContent(content);
