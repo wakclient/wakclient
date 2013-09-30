@@ -37,17 +37,11 @@ public class BenutzerinfoFragment extends Fragment {
 
 		if (userInformation != null) {
 			populateUi();
+		} else {
+			new UserInfoTask(getActivity()).execute();
 		}
 
 		return rootView;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (userInformation == null) {
-			new UserInfoTask(activity).execute();
-		}
 	}
 
 	protected void populateUi() {
