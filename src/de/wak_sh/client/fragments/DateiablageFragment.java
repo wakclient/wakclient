@@ -48,12 +48,6 @@ public class DateiablageFragment extends Fragment {
 		return rootView;
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-	}
-
 	private OnItemClickListener clickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -76,7 +70,7 @@ public class DateiablageFragment extends Fragment {
 		private Activity activity;
 
 		public FileTask(Activity activity) {
-			super(activity, "Lade Dateisystem...");
+			super(activity, activity.getString(R.string.fetching_filesystem));
 			this.activity = activity;
 		}
 
