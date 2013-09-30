@@ -1,4 +1,4 @@
-package de.wak_sh.client.backend;
+package de.wak_sh.client.backend.service;
 
 import java.io.IOException;
 import java.security.MessageDigest;

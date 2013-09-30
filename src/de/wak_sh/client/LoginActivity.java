@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.backend.ProgressDialogTask;
+import de.wak_sh.client.backend.service.DataService;
 
 public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;

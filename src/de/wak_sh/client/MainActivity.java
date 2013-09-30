@@ -20,9 +20,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import de.wak_sh.client.backend.DataService;
-import de.wak_sh.client.backend.NavigationDrawerAdapter;
-import de.wak_sh.client.backend.NavigationDrawerItem;
+import de.wak_sh.client.backend.adapters.NavigationDrawerAdapter;
+import de.wak_sh.client.backend.adapters.NavigationDrawerItem;
+import de.wak_sh.client.backend.service.DataService;
 import de.wak_sh.client.fragments.BenutzerinfoFragment;
 import de.wak_sh.client.fragments.DateiablageFragment;
 import de.wak_sh.client.fragments.NachrichtenFragment;

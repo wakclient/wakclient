@@ -1,4 +1,4 @@
-package de.wak_sh.client.backend;
+package de.wak_sh.client.backend.adapters;
 
 import android.support.v4.app.Fragment;
 

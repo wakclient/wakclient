@@ -3,7 +3,6 @@ package de.wak_sh.client.backend.service;
 import java.io.IOException;
 
 import de.wak_sh.client.Utils;
-import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.backend.model.UserInformation;
 
 /*

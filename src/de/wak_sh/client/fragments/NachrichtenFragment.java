@@ -16,8 +16,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import de.wak_sh.client.R;
-import de.wak_sh.client.backend.MessageArrayAdapter;
 import de.wak_sh.client.backend.ProgressDialogTask;
+import de.wak_sh.client.backend.adapters.MessageArrayAdapter;
 import de.wak_sh.client.backend.model.Message;
 import de.wak_sh.client.backend.service.MessageService;
 

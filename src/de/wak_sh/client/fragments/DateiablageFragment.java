@@ -15,8 +15,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import de.wak_sh.client.R;
-import de.wak_sh.client.backend.FileItemArrayAdapter;
 import de.wak_sh.client.backend.ProgressDialogTask;
+import de.wak_sh.client.backend.adapters.FileItemArrayAdapter;
 import de.wak_sh.client.backend.model.FileItem;
 import de.wak_sh.client.backend.service.FileService;
 

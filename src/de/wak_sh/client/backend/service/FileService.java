@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.wak_sh.client.Utils;
-import de.wak_sh.client.backend.DataService;
 import de.wak_sh.client.backend.model.FileItem;
 
 public class FileService {
