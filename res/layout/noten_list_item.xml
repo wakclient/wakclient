@@ -2,7 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/txt_modul"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.4" />
+
+    <TextView
+        android:id="@+id/txt_credits"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/txt_note1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15" 
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/txt_note2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15" 
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/txt_note3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15" 
+        android:gravity="center" />
 
 </LinearLayout>
