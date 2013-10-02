@@ -26,7 +26,7 @@ import de.wak_sh.client.backend.service.DataService;
 import de.wak_sh.client.fragments.BenutzerinfoFragment;
 import de.wak_sh.client.fragments.DateiablageFragment;
 import de.wak_sh.client.fragments.NachrichtenFragment;
-import de.wak_sh.client.fragments.NotenFragment;
+import de.wak_sh.client.fragments.NotenuebersichtFragment;
 
 public class MainActivity extends SherlockFragmentActivity {
 	public static final String ACTION_LOGOUT = "de.wak_sh.client.ACTION_LOGOUT";
@@ -64,7 +64,7 @@ public class MainActivity extends SherlockFragmentActivity {
 						android.R.drawable.sym_action_email,
 						new NachrichtenFragment()));
 		mDrawerItems.add(new NavigationDrawerItem(R.string.notenuebersicht,
-				R.drawable.ic_menu_mark, new NotenFragment()));
+				R.drawable.ic_menu_mark, new NotenuebersichtFragment()));
 		mDrawerItems.add(new NavigationDrawerItem(R.string.dateiablage,
 				R.drawable.ic_menu_archive, new DateiablageFragment()));
 

@@ -1,6 +1,10 @@
 package de.wak_sh.client.backend.model;
 
-public class Module {
+import java.io.Serializable;
+
+public class Module implements Serializable {
+	private static final long serialVersionUID = -5400042093685033589L;
+
 	private int semester;
 	private String name;
 	private int credits;

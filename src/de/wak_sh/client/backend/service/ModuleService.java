@@ -7,6 +7,10 @@ import java.util.List;
 import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.model.Module;
 
+/*
+ * Parts of this file are based on the work of Patrick Gotthard:
+ * http://www.patrick-gotthard.de/4659/wakclient
+ */
 public class ModuleService {
 	private DataService dataService;
 	private List<Module> modules;
@@ -40,6 +44,27 @@ public class ModuleService {
 			}
 			modules.add(new Module(semester, name, credits, grades));
 		}
+	}
 
+	public int countSemesters() {
+		int semester = 0;
+		int count = 0;
+		for (Module module : modules) {
+			if (module.getSemester() != semester) {
+				count++;
+				semester = module.getSemester();
+			}
+		}
+		return count;
+	}
+
+	public ArrayList<Module> getGrades(int semester) {
+		ArrayList<Module> grades = new ArrayList<Module>();
+		for (Module module : modules) {
+			if (module.getSemester() == semester) {
+				grades.add(module);
+			}
+		}
+		return grades;
 	}
 }
