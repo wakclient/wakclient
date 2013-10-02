@@ -4,23 +4,20 @@
     android:orientation="horizontal" >
 
     <TextView
-        android:id="@+id/msg_date"
+        android:id="@+id/msg_list_date"
         android:layout_width="83dp"
-        android:layout_height="wrap_content"
-        android:text="@string/datum" />
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/msg_from"
+        android:id="@+id/msg_list_from"
         android:layout_width="50dip"
         android:layout_height="wrap_content"
-        android:layout_weight="0.38"
-        android:text="@string/von" />
+        android:layout_weight="0.38" />
 
     <TextView
-        android:id="@+id/msg_subject"
+        android:id="@+id/msg_list_subject"
         android:layout_width="60dip"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/betreff" />
+        android:layout_weight="1" />
 
 </LinearLayout>

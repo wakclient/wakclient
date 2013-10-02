@@ -1,93 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
- <TableRow
-     android:layout_gravity="center_horizontal"
-     android:gravity="center_horizontal" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="80dp"
-        android:text="@string/benutzername"
-        android:singleLine="true" />
-    <TextView
-        android:id="@+id/text_benutzername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="80dp"
-        android:singleLine="true" />
- </TableRow>   
+    <TableRow
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal" >
 
- <TableRow
-     android:layout_gravity="center_horizontal"
-     android:gravity="center_horizontal" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="80dp"
+            android:singleLine="true"
+            android:text="@string/benutzername" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/studiengang" />
-    <TextView
-        android:id="@+id/text_studiengang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="15dp"
-        android:singleLine="true" />
-    
-    
- </TableRow>   
+        <TextView
+            android:id="@+id/text_benutzername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="80dp"
+            android:singleLine="true" />
+    </TableRow>
 
- <TableRow
-     android:layout_gravity="center_horizontal"
-     android:gravity="center_horizontal" >
+    <TableRow
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal" >
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/studiengruppe" />
-     <TextView
-        android:id="@+id/text_studiengruppe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="15dp"
-        android:singleLine="true"/>
-    
- </TableRow>   
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/studiengang" />
 
- <TableRow
-     android:layout_gravity="center_horizontal"
-     android:gravity="center_horizontal" >
+        <TextView
+            android:id="@+id/text_studiengang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:singleLine="true" />
+    </TableRow>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="15dp"
-        android:text="@string/matrikelnummer" />
- 
-    <TextView
-        android:id="@+id/text_matrikelnummer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="15dp"
-        android:singleLine="true" />
- </TableRow>   
- 
+    <TableRow
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/studiengruppe" />
+
+        <TextView
+            android:id="@+id/text_studiengruppe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:singleLine="true" />
+    </TableRow>
+
+    <TableRow
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/matrikelnummer" />
+
+        <TextView
+            android:id="@+id/text_matrikelnummer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:singleLine="true" />
+    </TableRow>
+
 </TableLayout>

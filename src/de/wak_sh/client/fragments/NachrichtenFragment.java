@@ -51,9 +51,11 @@ public class NachrichtenFragment extends Fragment {
 		View header = inflater
 				.inflate(R.layout.messages_list_item, null, false);
 
-		((TextView) header.findViewById(R.id.msg_date)).setText(R.string.datum);
-		((TextView) header.findViewById(R.id.msg_from)).setText(R.string.von);
-		((TextView) header.findViewById(R.id.msg_subject))
+		((TextView) header.findViewById(R.id.msg_list_date))
+				.setText(R.string.datum);
+		((TextView) header.findViewById(R.id.msg_list_from))
+				.setText(R.string.von);
+		((TextView) header.findViewById(R.id.msg_list_subject))
 				.setText(R.string.betreff);
 
 		listView = (ListView) rootView;

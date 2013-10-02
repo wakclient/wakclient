@@ -32,11 +32,11 @@ public class MessageArrayAdapter extends ArrayAdapter<Message> {
 		}
 
 		Message message = getItem(position);
-		((TextView) view.findViewById(R.id.msg_date))
-				.setText(message.getDate());
-		((TextView) view.findViewById(R.id.msg_from)).setText(message
+		((TextView) view.findViewById(R.id.msg_list_date)).setText(message
+				.getDate());
+		((TextView) view.findViewById(R.id.msg_list_from)).setText(message
 				.getSender());
-		((TextView) view.findViewById(R.id.msg_subject)).setText(message
+		((TextView) view.findViewById(R.id.msg_list_subject)).setText(message
 				.getSubject());
 
 		return view;
