@@ -1,6 +1,7 @@
 package de.wak_sh.client.fragments;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,12 @@ public class SemesterFragment extends Fragment {
 		@SuppressWarnings("unchecked")
 		ArrayList<Module> grades = (ArrayList<Module>) getArguments()
 				.getSerializable("grades");
+		float average = getArguments().getFloat("average");
+
+		TextView textAverage = (TextView) rootView
+				.findViewById(R.id.txt_durchschnitt);
+		textAverage
+				.setText(String.format(Locale.getDefault(), "%.2f", average));
 
 		ListView list = (ListView) rootView.findViewById(android.R.id.list);
 

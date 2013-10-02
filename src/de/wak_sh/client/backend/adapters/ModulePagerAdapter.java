@@ -21,6 +21,7 @@ public class ModulePagerAdapter extends FragmentPagerAdapter {
 		SemesterFragment fragment = new SemesterFragment();
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("grades", moduleService.getGrades(position + 1));
+		bundle.putFloat("average", moduleService.getAverageGrade(position + 1));
 		fragment.setArguments(bundle);
 		return fragment;
 	}

@@ -67,4 +67,25 @@ public class ModuleService {
 		}
 		return grades;
 	}
+
+	public int getCredits(int semester) {
+		int credits = 0;
+		for (Module module : modules) {
+			if (semester == 0 || semester == module.getSemester()) {
+				credits += module.getCredits();
+			}
+		}
+		return credits;
+	}
+
+	public float getAverageGrade(int semester) {
+		float average = 0f;
+		for (Module module : modules) {
+			if (semester == 0 || semester == module.getSemester()) {
+				average += module.getCredits() * module.getRelevantGrade();
+			}
+		}
+		average /= getCredits(semester);
+		return average;
+	}
 }

@@ -33,4 +33,14 @@ public class Module implements Serializable {
 		return grades;
 	}
 
+	public float getRelevantGrade() {
+		if (grades[2] != 0f) {
+			return grades[2];
+		} else if (grades[1] != 0f) {
+			return grades[1];
+		} else {
+			return grades[0];
+		}
+	}
+
 }

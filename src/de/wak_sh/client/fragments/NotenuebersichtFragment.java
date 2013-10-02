@@ -1,14 +1,16 @@
 package de.wak_sh.client.fragments;
 
 import java.io.IOException;
+import java.util.Locale;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.adapters.ModulePagerAdapter;
@@ -19,6 +21,8 @@ public class NotenuebersichtFragment extends Fragment {
 	private ModuleService moduleService;
 	private ModulePagerAdapter adapter;
 	private ViewPager pager;
+	private TextView textAverage;
+	private TextView textCredits;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,12 +38,28 @@ public class NotenuebersichtFragment extends Fragment {
 		pager = (ViewPager) rootView.findViewById(R.id.module_pager);
 		pager.setAdapter(adapter);
 
+		textAverage = (TextView) rootView
+				.findViewById(R.id.txt_overall_durchschnitt);
+		textCredits = (TextView) rootView
+				.findViewById(R.id.txt_overall_credits);
+
 		return rootView;
 	}
 
+	protected void populateUi() {
+		String average = String.format(Locale.getDefault(), "%.2f",
+				moduleService.getAverageGrade(0));
+		String credits = Integer.toString(moduleService.getCredits(0));
+		textAverage.setText(average);
+		textCredits.setText(credits);
+	}
+
 	private class GradesTask extends ProgressDialogTask<Void, Void> {
-		public GradesTask(Context context) {
-			super(context, context.getString(R.string.fetching_grades));
+		private Activity activity;
+
+		public GradesTask(Activity activity) {
+			super(activity, activity.getString(R.string.fetching_grades));
+			this.activity = activity;
 		}
 
 		@Override
@@ -67,6 +87,12 @@ public class NotenuebersichtFragment extends Fragment {
 			adapter.setModuleService(moduleService);
 			adapter.notifyDataSetChanged();
 			pager.setCurrentItem(semesters - 1);
+			activity.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					populateUi();
+				}
+			});
 		}
 	}
 }
