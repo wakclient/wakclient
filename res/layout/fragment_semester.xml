@@ -7,19 +7,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp" >
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/average" />
+            android:paddingRight="10dp"
+            android:text="@string/average"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txt_durchschnitt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.7"
+            android:paddingLeft="10dp" />
+
     </LinearLayout>
 
     <ListView

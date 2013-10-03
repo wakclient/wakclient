@@ -3,6 +3,7 @@ package de.wak_sh.client.fragments;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -46,6 +47,12 @@ public class SemesterFragment extends Fragment {
 		grade1.setText(R.string.grade1);
 		grade2.setText(R.string.grade2);
 		grade3.setText(R.string.grade3);
+		
+		moduleName.setTypeface(moduleName.getTypeface(), Typeface.BOLD);
+		credits.setTypeface(credits.getTypeface(), Typeface.BOLD);
+		grade1.setTypeface(grade1.getTypeface(), Typeface.BOLD);
+		grade2.setTypeface(grade2.getTypeface(), Typeface.BOLD);
+		grade3.setTypeface(grade3.getTypeface(), Typeface.BOLD);
 
 		list.addHeaderView(header);
 		list.setAdapter(new ModuleArrayAdapter(getActivity(), grades));
