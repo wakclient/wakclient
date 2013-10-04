@@ -186,6 +186,10 @@ public class DataService {
 		return gradesPage;
 	}
 
+	public String downloadFile(String url) throws IOException {
+		return fetchPage("/" + url);
+	}
+
 	private String fetchGradesPage() throws IOException {
 		String notenAnmeldung = fetchPage("/notenabfrage_bc.html");
 		String id = Utils.match(

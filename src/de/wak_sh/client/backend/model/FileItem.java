@@ -4,4 +4,5 @@ public class FileItem {
 	public String name;
 	public String path;
 	public String date;
+	public boolean file;
 }
