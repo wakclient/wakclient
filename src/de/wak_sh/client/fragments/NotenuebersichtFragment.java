@@ -30,10 +30,6 @@ public class NotenuebersichtFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_notenuebersicht,
 				container, false);
 
-		if (moduleService == null) {
-			new GradesTask(getActivity()).execute();
-		}
-
 		adapter = new ModulePagerAdapter(getFragmentManager());
 		pager = (ViewPager) rootView.findViewById(R.id.module_pager);
 		pager.setAdapter(adapter);
@@ -42,6 +38,12 @@ public class NotenuebersichtFragment extends Fragment {
 				.findViewById(R.id.txt_overall_durchschnitt);
 		textCredits = (TextView) rootView
 				.findViewById(R.id.txt_overall_credits);
+
+		if (moduleService != null) {
+			populateUi();
+		} else {
+			new GradesTask(getActivity()).execute();
+		}
 
 		return rootView;
 	}
