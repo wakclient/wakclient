@@ -67,11 +67,11 @@ public class DateiablageFragment extends Fragment {
 				long id) {
 			FileItem item = items.get(position);
 
-			if (item.file) {
+			if (item.isFile()) {
 				new FileDownloadTask(getActivity()).execute(item);
 			} else {
 				Bundle bundle = new Bundle();
-				bundle.putString("path", items.get(position).path);
+				bundle.putString("path", items.get(position).getPath());
 
 				DateiablageFragment fragment = new DateiablageFragment();
 				fragment.setArguments(bundle);
@@ -135,7 +135,7 @@ public class DateiablageFragment extends Fragment {
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(
 					context);
 			builder.setContentTitle(context.getString(R.string.download));
-			builder.setContentText(params[0].name);
+			builder.setContentText(params[0].getName());
 			builder.setSmallIcon(R.drawable.download_animation);
 			NotificationManager notifyManager = (NotificationManager) context
 					.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -143,7 +143,7 @@ public class DateiablageFragment extends Fragment {
 			int id = (int) System.currentTimeMillis();
 
 			File file = new File(Environment.getExternalStorageDirectory()
-					+ "/Download", params[0].name);
+					+ "/Download", params[0].getName());
 			String extension = MimeTypeMap.getFileExtensionFromUrl(file
 					.getAbsolutePath());
 			String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
@@ -159,7 +159,7 @@ public class DateiablageFragment extends Fragment {
 
 			FileService service = FileService.getInstance();
 			try {
-				service.downloadFile(params[0].path, file);
+				service.downloadFile(params[0].getPath(), file);
 			} catch (final IOException e) {
 				notifyManager.cancel(id);
 				((Activity) context).runOnUiThread(new Runnable() {

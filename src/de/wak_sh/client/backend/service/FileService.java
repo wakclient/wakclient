@@ -36,9 +36,8 @@ public class FileService {
 				service.getFileDepotPage());
 
 		for (String[] point : points) {
-			FileItem item = new FileItem();
-			item.path = point[0].replaceAll("amp;", "");
-			item.name = point[1];
+			FileItem item = new FileItem(point[1], point[0].replaceAll("amp;",
+					""), "", false);
 			items.add(item);
 		}
 
@@ -56,20 +55,14 @@ public class FileService {
 		List<String[]> files = Utils.matchAll(regexFiles, site);
 
 		for (String[] folder : folders) {
-			FileItem item = new FileItem();
-			item.file = false;
-			item.path = folder[0].replaceAll("amp;", "");
-			item.name = folder[1];
-			item.date = folder[2];
+			FileItem item = new FileItem(folder[1], folder[0].replaceAll(
+					"amp;", ""), folder[2], false);
 			items.add(item);
 		}
 
 		for (String[] file : files) {
-			FileItem item = new FileItem();
-			item.file = true;
-			item.path = file[0].replaceAll("amp;", "");
-			item.name = file[1];
-			item.date = file[2];
+			FileItem item = new FileItem(file[1],
+					file[0].replaceAll("amp;", ""), file[2], true);
 			items.add(item);
 		}
 

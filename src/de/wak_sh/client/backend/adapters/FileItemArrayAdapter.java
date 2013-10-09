@@ -31,8 +31,8 @@ public class FileItemArrayAdapter extends ArrayAdapter<FileItem> {
 		TextView text = (TextView) convertView.findViewById(R.id.file_name);
 		TextView date = (TextView) convertView.findViewById(R.id.file_date);
 		text.setSelected(true);
-		text.setText(item.name);
-		date.setText(item.date);
+		text.setText(item.getName());
+		date.setText(item.getDate());
 
 		return convertView;
 	}
