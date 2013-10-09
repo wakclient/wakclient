@@ -27,6 +27,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.adapters.FileItemArrayAdapter;
@@ -159,6 +160,14 @@ public class DateiablageFragment extends Fragment {
 
 			FileService service = FileService.getInstance();
 			try {
+				((Activity) context).runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(context, R.string.start_download,
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+
 				service.downloadFile(params[0].getPath(), file);
 			} catch (final IOException e) {
 				notifyManager.cancel(id);
