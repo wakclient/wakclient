@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Environment;
 import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.model.FileItem;
 
@@ -49,7 +48,7 @@ public class FileService {
 	private List<FileItem> fetchItems(String path) throws IOException {
 		List<FileItem> items = new ArrayList<FileItem>();
 		String regexFolders = "<td><a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;dir=.*?\\&amp;mountpoint=\\d*).*?\">(.*?)</a><br.*?<span class=\"info\">(.*?)</span>";
-		String regexFiles = "<td><a href=\"(c_dateiablage.html.*?task=download\\&amp;mountpoint=\\d*).*?\">(.*?)</a><br.*?<span class=\"info\">(.*?)</span>";
+		String regexFiles = "<td><a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;filename=.*?task=download\\&amp;mountpoint=\\d*).*?\">(.*?)</a><br.*?<span class=\"info\">(.*?)</span>";
 
 		String site = service.fetchPage("/" + path);
 
@@ -62,7 +61,6 @@ public class FileService {
 			item.path = folder[0].replaceAll("amp;", "");
 			item.name = folder[1];
 			item.date = folder[2];
-			System.out.println(item.name);
 			items.add(item);
 		}
 
@@ -91,12 +89,9 @@ public class FileService {
 		return items;
 	}
 
-	public void downloadFile(String name, String path) throws IOException {
-		File folder = new File(Environment.getExternalStorageDirectory(), name);
-
-		String content = service.downloadFile(path);
-
-		OutputStream os = new FileOutputStream(folder);
+	public void downloadFile(String url, File file) throws IOException {
+		String content = service.downloadFile(url);
+		OutputStream os = new FileOutputStream(file);
 		for (int i = 0; i < content.length(); i++)
 			os.write(content.codePointAt(i));
 		os.close();
