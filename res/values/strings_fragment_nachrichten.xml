@@ -6,5 +6,6 @@
     <string name="datum">Datum</string>
     <string name="fetching_messages">Hole Nachrichten</string>
     <string name="fetching_message">Hole Nachrichtentext</string>
+    <string name="attachments">Anhänge</string>
 
 </resources>
