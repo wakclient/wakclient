@@ -3,6 +3,8 @@ package de.wak_sh.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -135,6 +137,25 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!getSupportFragmentManager().popBackStackImmediate()) {
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setMessage(R.string.app_close_text)
+					.setPositiveButton(android.R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									finish();
+								}
+
+							}).setNegativeButton(android.R.string.no, null)
+					.show();
 		}
 	}
 
