@@ -48,18 +48,8 @@ public class NachrichtenFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_list, container,
 				false);
-		View header = inflater
-				.inflate(R.layout.messages_list_item, null, false);
-
-		((TextView) header.findViewById(R.id.msg_list_date))
-				.setText(R.string.datum);
-		((TextView) header.findViewById(R.id.msg_list_from))
-				.setText(R.string.von);
-		((TextView) header.findViewById(R.id.msg_list_subject))
-				.setText(R.string.betreff);
 
 		listView = (ListView) rootView;
-		listView.addHeaderView(header);
 		listView.setOnItemClickListener(clickListener);
 		adapter = new MessageArrayAdapter(getActivity(), messages);
 		listView.setAdapter(adapter);
