@@ -4,7 +4,7 @@
     <string name="action_logout">Abmelden</string>
     <string name="notenuebersicht">Notenübersicht</string>
     <string name="nachrichten">Nachrichten</string>
-    <string name="benutzerinfo">Benutzerinformationen</string><string name="action_refresh">Aktualisieren</string><string name="dateiablage">Dateiablage</string>
+    <string name="benutzerinfo">Informationen</string><string name="action_refresh">Aktualisieren</string><string name="dateiablage">Dateiablage</string>
     
     
 
