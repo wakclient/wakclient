@@ -32,7 +32,6 @@ public class NotenuebersichtFragment extends Fragment {
 
 		adapter = new ModulePagerAdapter(getFragmentManager());
 		pager = (ViewPager) rootView.findViewById(R.id.module_pager);
-		pager.setAdapter(adapter);
 
 		textAverage = (TextView) rootView
 				.findViewById(R.id.txt_overall_durchschnitt);
@@ -54,6 +53,11 @@ public class NotenuebersichtFragment extends Fragment {
 		String credits = Integer.toString(moduleService.getCredits(0));
 		textAverage.setText(average);
 		textCredits.setText(credits);
+
+		adapter.setModuleService(moduleService);
+		pager.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
+		pager.setCurrentItem(moduleService.countSemesters() - 1);
 	}
 
 	private class GradesTask extends ProgressDialogTask<Void, Void> {
@@ -85,10 +89,6 @@ public class NotenuebersichtFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			int semesters = moduleService.countSemesters();
-			adapter.setModuleService(moduleService);
-			adapter.notifyDataSetChanged();
-			pager.setCurrentItem(semesters - 1);
 			activity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {

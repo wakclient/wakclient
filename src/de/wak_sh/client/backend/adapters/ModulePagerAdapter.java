@@ -5,11 +5,11 @@ import java.util.Locale;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import de.wak_sh.client.backend.service.ModuleService;
 import de.wak_sh.client.fragments.SemesterFragment;
 
-public class ModulePagerAdapter extends FragmentPagerAdapter {
+public class ModulePagerAdapter extends FragmentStatePagerAdapter {
 	private ModuleService moduleService;
 
 	public ModulePagerAdapter(FragmentManager fm) {
