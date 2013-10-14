@@ -6,6 +6,7 @@ import java.util.Locale;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +16,35 @@ import de.wak_sh.client.R;
 import de.wak_sh.client.backend.adapters.ModuleArrayAdapter;
 import de.wak_sh.client.backend.model.Module;
 
-public class SemesterFragment extends Fragment {
+public class SemesterFragment extends ListFragment {
+	private ArrayList<Module> grades;
+	private float average;
+
+	public static Fragment newInstance(ArrayList<Module> grades, float average) {
+		SemesterFragment f = new SemesterFragment();
+
+		Bundle args = new Bundle();
+		args.putSerializable("grades", grades);
+		args.putFloat("average", average);
+		f.setArguments(args);
+
+		return f;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		grades = (ArrayList<Module>) getArguments().getSerializable("grades");
+		average = getArguments().getFloat("average");
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_semester, container,
 				false);
-
-		@SuppressWarnings("unchecked")
-		ArrayList<Module> grades = (ArrayList<Module>) getArguments()
-				.getSerializable("grades");
-		float average = getArguments().getFloat("average");
 
 		TextView textAverage = (TextView) rootView
 				.findViewById(R.id.txt_durchschnitt);
@@ -47,7 +66,7 @@ public class SemesterFragment extends Fragment {
 		grade1.setText(R.string.grade1);
 		grade2.setText(R.string.grade2);
 		grade3.setText(R.string.grade3);
-		
+
 		moduleName.setTypeface(moduleName.getTypeface(), Typeface.BOLD);
 		credits.setTypeface(credits.getTypeface(), Typeface.BOLD);
 		grade1.setTypeface(grade1.getTypeface(), Typeface.BOLD);
@@ -55,8 +74,14 @@ public class SemesterFragment extends Fragment {
 		grade3.setTypeface(grade3.getTypeface(), Typeface.BOLD);
 
 		list.addHeaderView(header);
-		list.setAdapter(new ModuleArrayAdapter(getActivity(), grades));
 
 		return rootView;
 	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setListAdapter(new ModuleArrayAdapter(getActivity(), grades));
+	}
+
 }
