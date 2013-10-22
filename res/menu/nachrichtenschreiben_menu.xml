@@ -1,11 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
- <item
+    <item
+        android:id="@+id/menuitem_mailattachment"
+        android:icon="@drawable/ic_menu_attachment"
+        android:showAsAction="ifRoom"
+        android:title="@string/attachments">
+    </item>
+    <item
         android:id="@+id/menuitem_sendmessage"
         android:icon="@drawable/ic_menu_send"
         android:showAsAction="ifRoom"
         android:title="@string/sendmail">
     </item>
-    
 
 </menu>
