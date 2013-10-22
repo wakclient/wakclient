@@ -4,17 +4,21 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.model.Message;
 import de.wak_sh.client.backend.service.MessageService;
 
-public class NachrichtLesenFragment extends Fragment {
+public class NachrichtLesenFragment extends SherlockFragment {
 	private TextView date;
 	private TextView from;
 	private TextView subject;
@@ -30,7 +34,7 @@ public class NachrichtLesenFragment extends Fragment {
 		from = (TextView) rootView.findViewById(R.id.msg_from);
 		subject = (TextView) rootView.findViewById(R.id.msg_subject);
 		text = (TextView) rootView.findViewById(R.id.msg_text);
-
+		setHasOptionsMenu(true);
 		return rootView;
 	}
 
@@ -79,5 +83,11 @@ public class NachrichtLesenFragment extends Fragment {
 				}
 			});
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.nachrichtenschreiben_menu, menu);
+
 	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +13,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.adapters.MessageArrayAdapter;
 import de.wak_sh.client.backend.model.Message;
 import de.wak_sh.client.backend.service.MessageService;
 
-public class NachrichtenFragment extends Fragment {
+public class NachrichtenFragment extends SherlockFragment {
 	protected List<Message> messages = new ArrayList<Message>();
 	protected ListView listView;
 
@@ -53,8 +56,9 @@ public class NachrichtenFragment extends Fragment {
 		listView.setOnItemClickListener(clickListener);
 		adapter = new MessageArrayAdapter(getActivity(), messages);
 		listView.setAdapter(adapter);
-
+		setHasOptionsMenu(true);
 		return rootView;
+
 	}
 
 	@Override
@@ -96,6 +100,12 @@ public class NachrichtenFragment extends Fragment {
 			return null;
 
 		}
+
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.nachrichten_menu, menu);
 
 	}
 }
