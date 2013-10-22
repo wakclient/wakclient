@@ -1,16 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
  <item
-        android:id="@+id/menuitem_newmessage"
-        android:icon="@drawable/ic_menu_compose"
+        android:id="@+id/menuitem_sendmessage"
+        android:icon="@drawable/ic_menu_send"
         android:showAsAction="ifRoom"
-        android:title="@string/newmessage">
-    </item>
-    <item
-        android:id="@+id/menuitem_answer"
-        android:icon="@drawable/ic_menu_revert"
-        android:showAsAction="ifRoom"
-        android:title="@string/answer_message">
+        android:title="@string/sendmail">
     </item>
     
 

@@ -87,7 +87,7 @@ public class NachrichtLesenFragment extends SherlockFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.nachrichtenschreiben_menu, menu);
+		inflater.inflate(R.menu.nachrichtenlesen_menu, menu);
 
 	}
 }

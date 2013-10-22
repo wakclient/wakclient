@@ -9,5 +9,7 @@
     <string name="attachments">Anhänge</string>
     <string name="newmessage">Neue Nachricht</string>
     <string name="answer_message">Antworten</string>
-
+    <string name="to">An</string>
+    <string name="writemail">E-Mail schreiben</string>
+  <string name="sendmail">E-Mail senden</string>
 </resources>
