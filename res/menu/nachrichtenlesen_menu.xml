@@ -1,17 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
- <item
-        android:id="@+id/menuitem_newmessage"
-        android:icon="@drawable/ic_menu_compose"
-        android:showAsAction="ifRoom"
-        android:title="@string/newmessage">
-    </item>
     <item
         android:id="@+id/menuitem_answer"
-        android:icon="@drawable/ic_menu_revert"
+        android:icon="@drawable/answer"
         android:showAsAction="ifRoom"
         android:title="@string/answer_message">
     </item>
-    
+    <item
+        android:id="@+id/menuitem_answerall"
+        android:icon="@drawable/answerall"
+        android:showAsAction="ifRoom"
+        android:title="@string/answerall_message">
+    </item>
 
 </menu>
