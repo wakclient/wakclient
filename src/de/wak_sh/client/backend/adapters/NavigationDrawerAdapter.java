@@ -10,14 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import de.wak_sh.client.R;
 
-public class NavigationDrawerAdapter extends ArrayAdapter<String> {
-	private final List<NavigationDrawerItem> mItems;
+public class NavigationDrawerAdapter extends ArrayAdapter<NavigationDrawerItem> {
 	private final LayoutInflater mInflater;
 
 	public NavigationDrawerAdapter(Context context,
 			List<NavigationDrawerItem> items) {
-		super(context, 0);
-		this.mItems = items;
+		super(context, 0, items);
 		mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -33,8 +31,8 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
 			view = (TextView) convertView;
 		}
 
-		int textId = mItems.get(position).getTitleId();
-		int imageId = mItems.get(position).getIconId();
+		int textId = getItem(position).getTitleId();
+		int imageId = getItem(position).getIconId();
 
 		view.setText(textId);
 		view.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
@@ -42,8 +40,4 @@ public class NavigationDrawerAdapter extends ArrayAdapter<String> {
 		return view;
 	}
 
-	@Override
-	public int getCount() {
-		return mItems.size();
-	}
 }
