@@ -12,4 +12,5 @@
     <string name="to">An</string>
     <string name="writemail">E-Mail schreiben</string>
   <string name="sendmail">E-Mail senden</string>
+  <string name="answerall_message">Antwort an alle</string>
 </resources>
