@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -23,6 +24,14 @@ public class NachrichtLesenFragment extends SherlockFragment {
 	private TextView from;
 	private TextView subject;
 	private TextView text;
+	private TextView attachment;
+
+	private OnClickListener onClickAttachment = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,7 +43,10 @@ public class NachrichtLesenFragment extends SherlockFragment {
 		from = (TextView) rootView.findViewById(R.id.msg_from);
 		subject = (TextView) rootView.findViewById(R.id.msg_subject);
 		text = (TextView) rootView.findViewById(R.id.msg_text);
+		attachment = (TextView) rootView.findViewById(R.id.msg_attachment);
+
 		setHasOptionsMenu(true);
+
 		return rootView;
 	}
 
@@ -49,6 +61,16 @@ public class NachrichtLesenFragment extends SherlockFragment {
 		from.setText(message.getSender());
 		subject.setText(message.getSubject());
 		text.setText(message.getContent());
+
+		if (message.getAttachmentId() > 0) {
+			attachment.setOnClickListener(onClickAttachment);
+			attachment.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.nachrichtenlesen_menu, menu);
 	}
 
 	private class MessageTask extends ProgressDialogTask<Integer, Message> {
@@ -83,11 +105,5 @@ public class NachrichtLesenFragment extends SherlockFragment {
 				}
 			});
 		}
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.nachrichtenlesen_menu, menu);
-
 	}
 }

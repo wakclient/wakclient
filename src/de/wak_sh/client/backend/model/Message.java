@@ -7,12 +7,22 @@ public class Message {
 	private String sender;
 	private String subject;
 	private String content;
+	private String attachmentFilename;
+	private int attachmentId;
 
 	public Message(String id, String date, String sender, String subject) {
 		this.id = id;
 		this.date = date;
 		this.sender = sender;
 		this.subject = subject;
+	}
+
+	public String getAttachmentFilename() {
+		return attachmentFilename;
+	}
+
+	public int getAttachmentId() {
+		return attachmentId;
 	}
 
 	public String getContent() {
@@ -33,6 +43,14 @@ public class Message {
 
 	public String getSubject() {
 		return subject;
+	}
+
+	public void setAttachmentFilename(String attachmentFilename) {
+		this.attachmentFilename = attachmentFilename;
+	}
+
+	public void setAttachmentId(int attachmentId) {
+		this.attachmentId = attachmentId;
 	}
 
 	public void setContent(String content) {
