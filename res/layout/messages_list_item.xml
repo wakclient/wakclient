@@ -20,9 +20,11 @@
             android:id="@+id/msg_list_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:layout_weight="0.3"
-            android:paddingTop="10dp" 
-            android:textSize="12sp"/>
+            android:gravity="right"
+            android:paddingTop="10dp"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <TextView
