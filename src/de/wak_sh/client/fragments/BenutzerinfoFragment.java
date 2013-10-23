@@ -2,13 +2,20 @@ package de.wak_sh.client.fragments;
 
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.model.UserInformation;
@@ -22,6 +29,27 @@ public class BenutzerinfoFragment extends Fragment {
 	private TextView studiengruppe;
 	private TextView matrikelnummer;
 
+	private OnClickListener onClickMatrikelnummer = new OnClickListener() {
+		@SuppressWarnings("deprecation")
+		@SuppressLint("NewApi")
+		@Override
+		public void onClick(View v) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				ClipboardManager clipboard = (ClipboardManager) getActivity()
+						.getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText("Matrikelnummer",
+						matrikelnummer.getText());
+				clipboard.setPrimaryClip(clip);
+			} else {
+				android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) getActivity()
+						.getSystemService(Context.CLIPBOARD_SERVICE);
+				clipboardManager.setText(matrikelnummer.getText());
+			}
+			Toast.makeText(getActivity(), R.string.matrikelnummer_kopiert,
+					Toast.LENGTH_SHORT).show();
+		}
+	};
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -34,6 +62,7 @@ public class BenutzerinfoFragment extends Fragment {
 				.findViewById(R.id.text_studiengruppe);
 		matrikelnummer = (TextView) rootView
 				.findViewById(R.id.text_matrikelnummer);
+		matrikelnummer.setOnClickListener(onClickMatrikelnummer);
 
 		if (userInformation != null) {
 			populateUi();

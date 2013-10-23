@@ -6,5 +6,6 @@
     <string name="studiengang">Studiengang:</string>
     <string name="studiengruppe">Studiengruppe:</string>
     <string name="matrikelnummer">Matrikelnummer:</string>
+    <string name="matrikelnummer_kopiert">Matrikelnummer in die Zwischenablage kopiert</string>
 
 </resources>
