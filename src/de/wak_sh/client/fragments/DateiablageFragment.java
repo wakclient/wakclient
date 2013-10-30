@@ -39,6 +39,8 @@ public class DateiablageFragment extends Fragment {
 	private FileItemArrayAdapter adapter;
 	private List<FileItem> items = new ArrayList<FileItem>();
 	private String path;
+	private File dir = new File(Environment.getExternalStorageDirectory()
+			+ "/Download/");
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,10 +68,47 @@ public class DateiablageFragment extends Fragment {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			FileItem item = items.get(position);
+			final FileItem item = items.get(position);
 
 			if (item.isFile()) {
-				new FileDownloadTask(getActivity()).execute(item);
+				final File file = new File(dir, item.getName());
+
+				if (file.exists()) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setTitle("Hinweis");
+					builder.setMessage(String
+							.format("Die Datei '%s' ist bereits vorhanden. Soll sie ersetzt werden?",
+									item.getName()));
+					builder.setPositiveButton(android.R.string.yes,
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									if (!file.delete()) {
+										Toast.makeText(
+												getActivity(),
+												"Datei konnte nicht gelöscht werden!",
+												Toast.LENGTH_SHORT).show();
+									}
+									dialog.dismiss();
+									new FileDownloadTask(getActivity(), item)
+											.execute();
+								}
+							});
+					builder.setNegativeButton(android.R.string.cancel,
+							new OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							});
+					builder.create().show();
+				} else {
+					new FileDownloadTask(getActivity(), item).execute();
+				}
 			} else {
 				Bundle bundle = new Bundle();
 				bundle.putString("path", items.get(position).getPath());
@@ -123,28 +162,91 @@ public class DateiablageFragment extends Fragment {
 		}
 	}
 
-	private class FileDownloadTask extends AsyncTask<FileItem, Void, Void> {
+	private class FileDownloadTask extends AsyncTask<Void, Void, Void> {
 
 		private Context context;
+		private FileItem item;
+		private File file;
 
-		public FileDownloadTask(Context context) {
+		private int id;
+
+		private NotificationCompat.Builder builder;
+		private NotificationManager manager;
+
+		public FileDownloadTask(Context context, FileItem item) {
 			this.context = context;
+			this.item = item;
+			id = (int) System.currentTimeMillis();
 		}
 
 		@Override
-		protected Void doInBackground(FileItem... params) {
-			NotificationCompat.Builder builder = new NotificationCompat.Builder(
-					context);
+		protected void onPreExecute() {
+			builder = new NotificationCompat.Builder(context);
 			builder.setContentTitle(context.getString(R.string.download));
-			builder.setContentText(params[0].getName());
+			builder.setContentText(item.getName());
 			builder.setSmallIcon(R.drawable.download_animation);
-			NotificationManager notifyManager = (NotificationManager) context
+			manager = (NotificationManager) context
 					.getSystemService(Context.NOTIFICATION_SERVICE);
 
-			int id = (int) System.currentTimeMillis();
+			file = new File(dir, item.getName());
 
-			File file = new File(Environment.getExternalStorageDirectory()
-					+ "/Download", params[0].getName());
+			if (!dir.exists()) {
+				boolean create = dir.mkdirs();
+				if (!create) {
+					Toast.makeText(context,
+							"Ordner konnte nicht erstellt werden!",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+
+			builder.setProgress(0, 0, true);
+			manager.notify(id, builder.build());
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			if (!isCancelled()) {
+				FileService service = FileService.getInstance();
+
+				try {
+					((Activity) context).runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(context, R.string.start_download,
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+
+					service.downloadFile(item.getPath(), file);
+				} catch (final IOException e) {
+					manager.cancel(id);
+					((Activity) context).runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									context);
+							builder.setTitle("IOException");
+							builder.setMessage(e.getMessage());
+							builder.setNeutralButton(android.R.string.cancel,
+									new OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									});
+							builder.create().show();
+						}
+					});
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
 			String extension = MimeTypeMap.getFileExtensionFromUrl(file
 					.getAbsolutePath());
 			String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
@@ -155,51 +257,13 @@ public class DateiablageFragment extends Fragment {
 			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 					intent, 0);
 
-			builder.setProgress(0, 0, true);
-			notifyManager.notify(id, builder.build());
-
-			FileService service = FileService.getInstance();
-			try {
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(context, R.string.start_download,
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-
-				service.downloadFile(params[0].getPath(), file);
-			} catch (final IOException e) {
-				notifyManager.cancel(id);
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								context);
-						builder.setTitle("IOException");
-						builder.setMessage(e.getMessage());
-						builder.setNeutralButton(android.R.string.cancel,
-								new OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.dismiss();
-									}
-								});
-						builder.create().show();
-					}
-				});
-			}
-
 			builder.setAutoCancel(true);
 			builder.setContentTitle(context
 					.getString(R.string.download_complete));
 			builder.setProgress(0, 0, false);
 			builder.setSmallIcon(R.drawable.menuitem_checkbox_on);
 			builder.setContentIntent(pendingIntent);
-			notifyManager.notify(id, builder.build());
-
-			return null;
+			manager.notify(id, builder.build());
 		}
 
 	}
