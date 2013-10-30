@@ -12,10 +12,19 @@
             android:id="@+id/msg_list_from"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="0.6"
             android:paddingTop="10dp"
             android:textSize="20sp" />
 
+        <ImageView 
+            android:id="@+id/msg_list_attachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:src="@drawable/ic_menu_attachment_holo_light" 
+            android:contentDescription="@string/msg_list_attachment"
+            android:visibility="gone"/>
+        
         <TextView
             android:id="@+id/msg_list_date"
             android:layout_width="0dp"
