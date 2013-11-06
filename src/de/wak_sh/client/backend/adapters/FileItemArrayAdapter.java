@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.model.FileItem;
@@ -30,9 +31,17 @@ public class FileItemArrayAdapter extends ArrayAdapter<FileItem> {
 
 		TextView text = (TextView) convertView.findViewById(R.id.file_name);
 		TextView date = (TextView) convertView.findViewById(R.id.file_date);
+		Button button = (Button) convertView.findViewById(R.id.file_actions);
+
 		text.setSelected(true);
 		text.setText(item.getName());
-		date.setText(item.getDate());
+		date.setText(item.getDate().trim());
+
+		if (item.isOwner()) {
+			button.setBackgroundResource(android.R.drawable.ic_menu_more);
+		} else {
+			button.setBackgroundResource(0);
+		}
 
 		return convertView;
 	}

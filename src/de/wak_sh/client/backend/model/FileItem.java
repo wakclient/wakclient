@@ -5,6 +5,7 @@ public class FileItem {
 	private String path;
 	private String date;
 	private boolean file;
+	private boolean owner;
 
 	public FileItem(String name, String path, String date, boolean file) {
 		super();
@@ -44,6 +45,14 @@ public class FileItem {
 
 	public void setFile(boolean file) {
 		this.file = file;
+	}
+
+	public boolean isOwner() {
+		return owner;
+	}
+
+	public void setOwner(boolean owner) {
+		this.owner = owner;
 	}
 
 }

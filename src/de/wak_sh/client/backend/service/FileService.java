@@ -57,12 +57,23 @@ public class FileService {
 		for (String[] folder : folders) {
 			FileItem item = new FileItem(folder[1], folder[0].replaceAll(
 					"amp;", ""), folder[2], false);
+
 			items.add(item);
 		}
 
 		for (String[] file : files) {
 			FileItem item = new FileItem(file[1],
 					file[0].replaceAll("amp;", ""), file[2], true);
+
+			String deletePattern = file[0].replace("task=download",
+					"task=delete");
+			String renamePattern = file[0].replace("task=download",
+					"task=rename");
+
+			if (site.contains(deletePattern) || site.contains(renamePattern)) {
+				item.setOwner(true);
+			}
+
 			items.add(item);
 		}
 
@@ -85,8 +96,9 @@ public class FileService {
 	public void downloadFile(String url, File file) throws IOException {
 		String content = service.downloadFile(url);
 		OutputStream os = new FileOutputStream(file);
-		for (int i = 0; i < content.length(); i++)
+		for (int i = 0; i < content.length(); i++) {
 			os.write(content.codePointAt(i));
+		}
 		os.close();
 	}
 }
