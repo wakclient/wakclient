@@ -3,7 +3,7 @@
 
     <string name="delete">Löschen</string>
     <string name="move">Verschieben</string>
-    <string name="rename">Umbennnen</string>
+    <string name="rename">Umbenennen</string>
     <string name="fetching_filesystem">Lade Dateisystem&#8230;</string>
     <string name="download">Download</string>
     <string name="download_complete">Download abgeschlossen</string>
