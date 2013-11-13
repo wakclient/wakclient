@@ -16,5 +16,6 @@
         android:orderInCategory="200"
         android:showAsAction="never"
         android:title="@string/settings"/>
+    <item android:id="@+id/file_upload" android:title="@string/file_upload" android:visible="false"></item>
 
 </menu>
