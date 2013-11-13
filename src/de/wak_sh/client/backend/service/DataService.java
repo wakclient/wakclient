@@ -123,6 +123,7 @@ public class DataService {
 	private String post(String path, List<NameValuePair> parameters)
 			throws IOException {
 		HttpPost request = new HttpPost(BASE_URL + path);
+		System.out.println(request.getURI());
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters);
 		request.setEntity(entity);
 		return execute(request);
@@ -155,6 +156,16 @@ public class DataService {
 			page = get(url);
 		}
 
+		return page;
+	}
+
+	public String postPage(String url, List<NameValuePair> data)
+			throws IOException {
+		String page = post(url, data);
+		while (page.contains("Benutzeranmeldung")) {
+			doLogin();
+			page = post(url, data);
+		}
 		return page;
 	}
 

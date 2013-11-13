@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.model.FileItem;
 
@@ -100,5 +103,56 @@ public class FileService {
 			os.write(content.codePointAt(i));
 		}
 		os.close();
+	}
+
+	public boolean deleteFile(FileItem item) throws IOException {
+		String path = item.getPath();
+
+		int indexOfDir = path.indexOf("dir=") + 4;
+		int indexOfFilename = path.indexOf("filename=") + 9;
+
+		String dir = path.substring(indexOfDir, path.indexOf("&", indexOfDir));
+		String filename = path.substring(indexOfFilename,
+				path.indexOf("&", indexOfFilename));
+
+		List<NameValuePair> data = new ArrayList<NameValuePair>();
+		data.add(new BasicNameValuePair("dir",
+				"5._Semester%2FInnerUEberInfo.Systeme"));
+		data.add(new BasicNameValuePair("mountpoint", "718"));
+		data.add(new BasicNameValuePair("task", "delete"));
+		data.add(new BasicNameValuePair("confirmed", "yes"));
+		data.add(new BasicNameValuePair("filename",
+				"Wiederholungen_Sept_2013.pdf"));
+
+		System.out.println(service.postPage("/c_dateiablage.html?no_cache=1",
+				data));
+
+		return false;
+	}
+
+	public boolean renameFile(FileItem item) throws IOException {
+		String path = item.getPath();
+
+		int indexOfDir = path.indexOf("dir=") + 4;
+		int indexOfOldname = path.indexOf("filename=") + 9;
+
+		String dir = path.substring(indexOfDir, path.indexOf("&", indexOfDir));
+		String oldname = path.substring(indexOfOldname,
+				path.indexOf("&", indexOfOldname));
+
+		System.out.println("dir=" + dir);
+		System.out.println("oldname=" + oldname);
+
+		List<NameValuePair> data = new ArrayList<NameValuePair>();
+		data.add(new BasicNameValuePair("dir", dir));
+		data.add(new BasicNameValuePair("mountpoint", "718"));
+		data.add(new BasicNameValuePair("task", "rename"));
+		data.add(new BasicNameValuePair("oldname", item.getName()));
+		data.add(new BasicNameValuePair("newname", "test_rename_wakclient.pdf"));
+
+		System.out.println(service.postPage("/c_dateiablage.html?no_cache=1",
+				data));
+
+		return false;
 	}
 }
