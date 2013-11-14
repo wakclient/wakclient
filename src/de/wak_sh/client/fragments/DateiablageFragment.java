@@ -13,10 +13,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationCompat;
@@ -39,8 +40,7 @@ public class DateiablageFragment extends Fragment {
 	private FileItemArrayAdapter adapter;
 	private List<FileItem> items = new ArrayList<FileItem>();
 	private String path;
-	private File dir = new File(Environment.getExternalStorageDirectory()
-			+ "/Download/");
+	private File dir;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +60,13 @@ public class DateiablageFragment extends Fragment {
 		if (items.isEmpty()) {
 			new FileTask(getActivity()).execute();
 		}
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(rootView.getContext());
+		String dirPath = prefs.getString(
+				getString(R.string.pref_key_storage_location), "/");
+
+		dir = new File(dirPath);
 
 		return rootView;
 	}

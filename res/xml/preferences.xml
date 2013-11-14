@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pref_header_storage" >
+        <EditTextPreference
+            android:key="@string/pref_key_storage_location"
+            android:summary="@string/pref_description_storage_location"
+            android:title="@string/pref_title_storage_location"
+            android:defaultValue="/storage/sdcard0/Downloads/" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

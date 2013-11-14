@@ -6,8 +6,11 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,6 +51,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		initSharedPreferences();
 
 		if (!DataService.getInstance().isLoggedIn()) {
 			Intent intent = new Intent(this, LoginActivity.class);
@@ -134,6 +139,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		case R.id.action_logout:
 			logout();
 			return true;
+		case R.id.action_settings:
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -181,4 +190,15 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
+	private void initSharedPreferences() {
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		if (!preferences
+				.contains(getString(R.string.pref_key_storage_location))) {
+			SharedPreferences.Editor editor = preferences.edit();
+			editor.putString(getString(R.string.pref_key_storage_location),
+					Environment.getExternalStorageDirectory() + "/Downloads/");
+			editor.commit();
+		}
+	}
 }
