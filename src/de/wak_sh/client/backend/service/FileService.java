@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,23 +107,17 @@ public class FileService {
 	}
 
 	public boolean deleteFile(FileItem item) throws IOException {
-		String path = item.getPath();
+		String path = URLDecoder.decode(item.getPath(), "UTF-8");
 
 		int indexOfDir = path.indexOf("dir=") + 4;
-		int indexOfFilename = path.indexOf("filename=") + 9;
-
 		String dir = path.substring(indexOfDir, path.indexOf("&", indexOfDir));
-		String filename = path.substring(indexOfFilename,
-				path.indexOf("&", indexOfFilename));
 
 		List<NameValuePair> data = new ArrayList<NameValuePair>();
-		data.add(new BasicNameValuePair("dir",
-				"5._Semester%2FInnerUEberInfo.Systeme"));
+		data.add(new BasicNameValuePair("dir", dir));
 		data.add(new BasicNameValuePair("mountpoint", "718"));
 		data.add(new BasicNameValuePair("task", "delete"));
 		data.add(new BasicNameValuePair("confirmed", "yes"));
-		data.add(new BasicNameValuePair("filename",
-				"Wiederholungen_Sept_2013.pdf"));
+		data.add(new BasicNameValuePair("filename", item.getName()));
 
 		System.out.println(service.postPage("/c_dateiablage.html?no_cache=1",
 				data));
@@ -130,25 +125,19 @@ public class FileService {
 		return false;
 	}
 
-	public boolean renameFile(FileItem item) throws IOException {
-		String path = item.getPath();
+	public boolean renameFile(FileItem item, String newName) throws IOException {
+		String path = URLDecoder.decode(item.getPath(), "UTF-8");
 
 		int indexOfDir = path.indexOf("dir=") + 4;
-		int indexOfOldname = path.indexOf("filename=") + 9;
 
 		String dir = path.substring(indexOfDir, path.indexOf("&", indexOfDir));
-		String oldname = path.substring(indexOfOldname,
-				path.indexOf("&", indexOfOldname));
-
-		System.out.println("dir=" + dir);
-		System.out.println("oldname=" + oldname);
 
 		List<NameValuePair> data = new ArrayList<NameValuePair>();
 		data.add(new BasicNameValuePair("dir", dir));
 		data.add(new BasicNameValuePair("mountpoint", "718"));
 		data.add(new BasicNameValuePair("task", "rename"));
 		data.add(new BasicNameValuePair("oldname", item.getName()));
-		data.add(new BasicNameValuePair("newname", "test_rename_wakclient.pdf"));
+		data.add(new BasicNameValuePair("newname", newName));
 
 		System.out.println(service.postPage("/c_dateiablage.html?no_cache=1",
 				data));

@@ -123,7 +123,6 @@ public class DataService {
 	private String post(String path, List<NameValuePair> parameters)
 			throws IOException {
 		HttpPost request = new HttpPost(BASE_URL + path);
-		System.out.println(request.getURI());
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters);
 		request.setEntity(entity);
 		return execute(request);
