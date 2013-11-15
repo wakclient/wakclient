@@ -106,7 +106,7 @@ public class FileService {
 		os.close();
 	}
 
-	public boolean deleteFile(FileItem item) throws IOException {
+	public void deleteFile(FileItem item) throws IOException {
 		String path = URLDecoder.decode(item.getPath(), "UTF-8");
 
 		int indexOfDir = path.indexOf("dir=") + 4;
@@ -119,17 +119,13 @@ public class FileService {
 		data.add(new BasicNameValuePair("confirmed", "yes"));
 		data.add(new BasicNameValuePair("filename", item.getName()));
 
-		System.out.println(service.postPage("/c_dateiablage.html?no_cache=1",
-				data));
-
-		return false;
+		service.postPage("/c_dateiablage.html?no_cache=1", data);
 	}
 
-	public boolean renameFile(FileItem item, String newName) throws IOException {
+	public void renameFile(FileItem item, String newName) throws IOException {
 		String path = URLDecoder.decode(item.getPath(), "UTF-8");
 
 		int indexOfDir = path.indexOf("dir=") + 4;
-
 		String dir = path.substring(indexOfDir, path.indexOf("&", indexOfDir));
 
 		List<NameValuePair> data = new ArrayList<NameValuePair>();
@@ -139,9 +135,6 @@ public class FileService {
 		data.add(new BasicNameValuePair("oldname", item.getName()));
 		data.add(new BasicNameValuePair("newname", newName));
 
-		System.out.println(service.postPage("/c_dateiablage.html?no_cache=1",
-				data));
-
-		return false;
+		service.postPage("/c_dateiablage.html?no_cache=1", data);
 	}
 }

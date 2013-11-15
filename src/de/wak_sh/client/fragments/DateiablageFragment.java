@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -27,15 +28,17 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.adapters.FileItemArrayAdapter;
+import de.wak_sh.client.backend.adapters.FileItemArrayAdapter.FragmentInterface;
 import de.wak_sh.client.backend.model.FileItem;
 import de.wak_sh.client.backend.service.FileService;
 
-public class DateiablageFragment extends Fragment {
+public class DateiablageFragment extends Fragment implements FragmentInterface {
 
 	private FileItemArrayAdapter adapter;
 	private List<FileItem> items = new ArrayList<FileItem>();
@@ -48,7 +51,7 @@ public class DateiablageFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_list, container,
 				false);
 
-		adapter = new FileItemArrayAdapter(getActivity(), items);
+		adapter = new FileItemArrayAdapter(getActivity(), items, this);
 		ListView listView = (ListView) rootView;
 		listView.setOnItemClickListener(clickListener);
 		listView.setAdapter(adapter);
@@ -58,7 +61,7 @@ public class DateiablageFragment extends Fragment {
 		}
 
 		if (items.isEmpty()) {
-			new FileTask(getActivity()).execute();
+			new FileResolveTask(getActivity()).execute();
 		}
 
 		SharedPreferences prefs = PreferenceManager
@@ -105,7 +108,6 @@ public class DateiablageFragment extends Fragment {
 							});
 					builder.setNegativeButton(android.R.string.cancel,
 							new OnClickListener() {
-
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
@@ -131,11 +133,11 @@ public class DateiablageFragment extends Fragment {
 		}
 	};
 
-	private class FileTask extends ProgressDialogTask<Void, Void> {
+	private class FileResolveTask extends ProgressDialogTask<Void, Void> {
 
 		private Activity activity;
 
-		public FileTask(Activity activity) {
+		public FileResolveTask(Activity activity) {
 			super(activity, activity.getString(R.string.fetching_filesystem));
 			this.activity = activity;
 		}
@@ -272,6 +274,100 @@ public class DateiablageFragment extends Fragment {
 			builder.setContentIntent(pendingIntent);
 			manager.notify(id, builder.build());
 		}
+	}
 
+	private class FileRenameTask extends ProgressDialogTask<FileItem, Void> {
+		private String newName;
+
+		public FileRenameTask(Context context, String text, String newName) {
+			super(context, text);
+			this.newName = newName;
+		}
+
+		@Override
+		protected Void doInBackground(FileItem... params) {
+			FileItem item = params[0];
+			try {
+				FileService.getInstance().renameFile(item, newName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+	}
+
+	private class FileDeleteTask extends ProgressDialogTask<FileItem, Void> {
+
+		public FileDeleteTask(Context context, String text) {
+			super(context, text);
+		}
+
+		@Override
+		protected Void doInBackground(FileItem... params) {
+			FileItem item = params[0];
+			try {
+				FileService.getInstance().deleteFile(item);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+
+	@Override
+	public void doRename(final FileItem item) {
+		final EditText input = new EditText(getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Umbennen");
+		builder.setMessage("Neuer Dateiname");
+		builder.setView(input);
+		builder.setNegativeButton("Abbrechen",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				String newName = input.getText().toString();
+				if (newName.length() == 0) {
+					Toast.makeText(getActivity(), "Ungültiger Dateiname",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					new FileRenameTask(getActivity(),
+							"Datei wird umbenannt...", newName).execute(item);
+					getActivity().onBackPressed();
+				}
+			}
+		});
+		builder.create().show();
+	}
+
+	@Override
+	public void doDelete(final FileItem item) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Hinweis");
+		builder.setMessage("Sind Sie sicher das Sie die folgende Datei löschen möchten?\n\n"
+				+ item.getName());
+		builder.setNegativeButton("Abbrechen",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+		builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				new FileDeleteTask(getActivity(), "Datei wird gelöscht...")
+						.execute(item);
+				getActivity().onBackPressed();
+			}
+		});
+		builder.create().show();
 	}
 }
