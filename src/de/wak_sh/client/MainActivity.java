@@ -197,7 +197,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				.contains(getString(R.string.pref_key_storage_location))) {
 			SharedPreferences.Editor editor = preferences.edit();
 			editor.putString(getString(R.string.pref_key_storage_location),
-					Environment.getExternalStorageDirectory() + "/Downloads/");
+					Environment.getExternalStorageDirectory() + "/Download/");
 			editor.commit();
 		}
 	}
