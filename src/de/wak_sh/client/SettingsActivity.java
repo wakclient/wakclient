@@ -7,6 +7,7 @@ public class SettingsActivity extends PreferenceActivity {
 
 	public static final String PREF_STORAGE_LOCATION = "storage_location";
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
