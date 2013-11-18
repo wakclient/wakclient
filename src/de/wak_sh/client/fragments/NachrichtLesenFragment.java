@@ -6,8 +6,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -25,13 +26,7 @@ public class NachrichtLesenFragment extends SherlockFragment {
 	private TextView subject;
 	private TextView text;
 	private TextView attachment;
-
-	private OnClickListener onClickAttachment = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			// TODO
-		}
-	};
+	private LinearLayout attachmentList;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +39,8 @@ public class NachrichtLesenFragment extends SherlockFragment {
 		subject = (TextView) rootView.findViewById(R.id.msg_subject);
 		text = (TextView) rootView.findViewById(R.id.msg_text);
 		attachment = (TextView) rootView.findViewById(R.id.msg_attachment);
+		attachmentList = (LinearLayout) rootView
+				.findViewById(R.id.msg_attachment_list);
 
 		setHasOptionsMenu(true);
 
@@ -62,9 +59,16 @@ public class NachrichtLesenFragment extends SherlockFragment {
 		subject.setText(message.getSubject());
 		text.setText(message.getContent());
 
-		if (message.getAttachmentId() > 0) {
-			attachment.setOnClickListener(onClickAttachment);
+		if (message.getAttachmentIds().size() > 0) {
 			attachment.setVisibility(View.VISIBLE);
+
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+					getActivity(), R.layout.attachment_list_item,
+					R.id.attachment_list_item, message.getAttachmentFilenames());
+			for (int i = 0; i < adapter.getCount(); i++) {
+				View item = adapter.getView(i, null, null);
+				attachmentList.addView(item);
+			}
 		}
 	}
 

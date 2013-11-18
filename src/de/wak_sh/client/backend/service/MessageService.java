@@ -55,10 +55,8 @@ public class MessageService {
 
 			pattern = "<a href=\"index\\.php.*?&a=(\\d+).*?\".*?&nbsp;(.*?)</a";
 			List<String[]> matches = Utils.matchAll(pattern, subject);
-			if (matches.size() > 0) {
-				String[] match = matches.get(0);
-				message.setAttachmentId(Integer.parseInt(match[0]));
-				message.setAttachmentFilename(match[1]);
+			for (String[] match : matches) {
+				message.addAttachment(Integer.parseInt(match[0]), match[1]);
 			}
 		}
 	}
