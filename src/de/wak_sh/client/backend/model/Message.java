@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Message {
 
-	private String id;
+	private int id;
 	private String date;
 	private String sender;
 	private String subject;
@@ -13,7 +13,7 @@ public class Message {
 	private List<String> attachmentFilenames;
 	private List<Integer> attachmentIds;
 
-	public Message(String id, String date, String sender, String subject) {
+	public Message(int id, String date, String sender, String subject) {
 		this.id = id;
 		this.date = date;
 		this.sender = sender;
@@ -30,7 +30,7 @@ public class Message {
 		return date;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 

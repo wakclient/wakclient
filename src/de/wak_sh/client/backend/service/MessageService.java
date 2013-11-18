@@ -3,6 +3,7 @@ package de.wak_sh.client.backend.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.model.Message;
@@ -13,6 +14,7 @@ import de.wak_sh.client.backend.model.Message;
  */
 public class MessageService {
 	private static final String READ_URL = "/c_email.html?&action=getviewmessagessingle&msg_uid=";
+	private static final String ATTACHMENT_URL = "/index.php?eID=tx_cwtcommunity_pi1_download&m=%d&a=%d";
 
 	private static MessageService instance;
 
@@ -36,7 +38,7 @@ public class MessageService {
 		List<String[]> nachrichten = Utils.matchAll(regex,
 				dataService.getMessagesPage());
 		for (String[] nachricht : nachrichten) {
-			String id = nachricht[0];
+			int id = Integer.parseInt(nachricht[0]);
 			String subject = nachricht[1];
 			String date = nachricht[2];
 			String sender = nachricht[3];
@@ -67,6 +69,11 @@ public class MessageService {
 
 	public Message getMessage(int index) {
 		return messages.get(index);
+	}
+
+	public static String buildAttachmentUrl(int msgId, int attachmentId) {
+		return String.format(Locale.getDefault(), ATTACHMENT_URL, msgId,
+				attachmentId);
 	}
 
 }

@@ -1,11 +1,13 @@
 package de.wak_sh.client.fragments;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ public class NachrichtLesenFragment extends SherlockFragment {
 	private TextView text;
 	private TextView attachment;
 	private LinearLayout attachmentList;
+	private Message message;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,17 +61,37 @@ public class NachrichtLesenFragment extends SherlockFragment {
 		from.setText(message.getSender());
 		subject.setText(message.getSubject());
 		text.setText(message.getContent());
+		this.message = message;
 
 		if (message.getAttachmentIds().size() > 0) {
-			attachment.setVisibility(View.VISIBLE);
+			showAttachments();
+		}
+	}
 
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-					getActivity(), R.layout.attachment_list_item,
-					R.id.attachment_list_item, message.getAttachmentFilenames());
-			for (int i = 0; i < adapter.getCount(); i++) {
-				View item = adapter.getView(i, null, null);
-				attachmentList.addView(item);
-			}
+	public void showAttachments() {
+		attachment.setVisibility(View.VISIBLE);
+		List<Integer> attachmentIds = message.getAttachmentIds();
+		List<String> filenames = message.getAttachmentFilenames();
+		int msgId = message.getId();
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+				R.layout.attachment_list_item, R.id.attachment_list_item,
+				message.getAttachmentFilenames());
+		for (int i = 0; i < adapter.getCount(); i++) {
+			View item = adapter.getView(i, null, null);
+			attachmentList.addView(item);
+
+			int attachmentId = attachmentIds.get(i);
+			final String filename = filenames.get(i);
+			final String url = MessageService.buildAttachmentUrl(msgId,
+					attachmentId);
+			item.setFocusable(true);
+			item.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO: download file
+				}
+			});
 		}
 	}
 
