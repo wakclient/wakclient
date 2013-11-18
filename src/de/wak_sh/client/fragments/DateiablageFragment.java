@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -32,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.wak_sh.client.R;
+import de.wak_sh.client.SettingsActivity;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.adapters.FileItemArrayAdapter;
 import de.wak_sh.client.backend.adapters.FileItemArrayAdapter.FragmentInterface;
@@ -67,7 +67,7 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(rootView.getContext());
 		String dirPath = prefs.getString(
-				getString(R.string.pref_key_storage_location), "/");
+				SettingsActivity.PREF_STORAGE_LOCATION, "/");
 
 		dir = new File(dirPath);
 
@@ -226,7 +226,8 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 						}
 					});
 
-					service.downloadFile(item.getPath(), file);
+					service.downloadFile(item.getPath(), item.getName(),
+							context);
 				} catch (final IOException e) {
 					manager.cancel(id);
 					((Activity) context).runOnUiThread(new Runnable() {

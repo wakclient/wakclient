@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="pref_key_storage_location">storage_location</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="pref_header_storage">Speicher</string>
     <string name="pref_title_storage_location">Speicherort</string>

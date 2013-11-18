@@ -193,10 +193,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	private void initSharedPreferences() {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		if (!preferences
-				.contains(getString(R.string.pref_key_storage_location))) {
+		if (!preferences.contains(SettingsActivity.PREF_STORAGE_LOCATION)) {
 			SharedPreferences.Editor editor = preferences.edit();
-			editor.putString(getString(R.string.pref_key_storage_location),
+			editor.putString(SettingsActivity.PREF_STORAGE_LOCATION,
 					Environment.getExternalStorageDirectory() + "/Download/");
 			editor.commit();
 		}

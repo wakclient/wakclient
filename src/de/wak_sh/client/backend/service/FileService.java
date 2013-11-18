@@ -11,6 +11,10 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import de.wak_sh.client.SettingsActivity;
 import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.model.FileItem;
 
@@ -97,12 +101,20 @@ public class FileService {
 		return items;
 	}
 
-	public void downloadFile(String url, File file) throws IOException {
+	public void downloadFile(String url, String filename, Context context)
+			throws IOException {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		String dirPath = prefs.getString(
+				SettingsActivity.PREF_STORAGE_LOCATION, "/");
+
 		String content = service.downloadFile(url);
-		OutputStream os = new FileOutputStream(file);
+		OutputStream os = new FileOutputStream(new File(dirPath + "/"
+				+ filename));
 		for (int i = 0; i < content.length(); i++) {
 			os.write(content.codePointAt(i));
 		}
+
 		os.close();
 	}
 
