@@ -18,6 +18,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 
 import de.wak_sh.client.R;
+import de.wak_sh.client.backend.FileDownloadTask;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.model.Message;
 import de.wak_sh.client.backend.service.MessageService;
@@ -89,7 +90,7 @@ public class NachrichtLesenFragment extends SherlockFragment {
 			item.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO: download file
+					new FileDownloadTask(getActivity(), filename).execute(url);
 				}
 			});
 		}
