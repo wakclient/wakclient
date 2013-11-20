@@ -7,24 +7,17 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -32,6 +25,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import de.wak_sh.client.R;
 import de.wak_sh.client.SettingsActivity;
+import de.wak_sh.client.backend.FileDownloadTask;
 import de.wak_sh.client.backend.ProgressDialogTask;
 import de.wak_sh.client.backend.adapters.FileItemArrayAdapter;
 import de.wak_sh.client.backend.adapters.FileItemArrayAdapter.FragmentInterface;
@@ -43,7 +37,6 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 	private FileItemArrayAdapter adapter;
 	private List<FileItem> items = new ArrayList<FileItem>();
 	private String path;
-	private File dir;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,13 +57,6 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 			new FileResolveTask(getActivity()).execute();
 		}
 
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(rootView.getContext());
-		String dirPath = prefs.getString(
-				SettingsActivity.PREF_STORAGE_LOCATION, "/");
-
-		dir = new File(dirPath);
-
 		return rootView;
 	}
 
@@ -81,7 +67,12 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 			final FileItem item = items.get(position);
 
 			if (item.isFile()) {
-				final File file = new File(dir, item.getName());
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(getActivity());
+				String dirPath = prefs.getString(
+						SettingsActivity.PREF_STORAGE_LOCATION, "/");
+
+				final File file = new File(dirPath, item.getName());
 
 				if (file.exists()) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -98,12 +89,11 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 									if (!file.delete()) {
 										Toast.makeText(
 												getActivity(),
-												"Datei konnte nicht gelöscht werden!",
+												"Datei konnte nicht gelÃ¶scht werden!",
 												Toast.LENGTH_SHORT).show();
 									}
 									dialog.dismiss();
-									new FileDownloadTask(getActivity(), item)
-											.execute();
+									doDownload(item);
 								}
 							});
 					builder.setNegativeButton(android.R.string.cancel,
@@ -116,7 +106,7 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 							});
 					builder.create().show();
 				} else {
-					new FileDownloadTask(getActivity(), item).execute();
+					doDownload(item);
 				}
 			} else {
 				Bundle bundle = new Bundle();
@@ -171,112 +161,6 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 		}
 	}
 
-	private class FileDownloadTask extends AsyncTask<Void, Void, Void> {
-
-		private Context context;
-		private FileItem item;
-		private File file;
-
-		private int id;
-
-		private NotificationCompat.Builder builder;
-		private NotificationManager manager;
-
-		public FileDownloadTask(Context context, FileItem item) {
-			this.context = context;
-			this.item = item;
-			id = (int) System.currentTimeMillis();
-		}
-
-		@Override
-		protected void onPreExecute() {
-			builder = new NotificationCompat.Builder(context);
-			builder.setContentTitle(context.getString(R.string.download));
-			builder.setContentText(item.getName());
-			builder.setSmallIcon(R.drawable.download_animation);
-			manager = (NotificationManager) context
-					.getSystemService(Context.NOTIFICATION_SERVICE);
-
-			file = new File(dir, item.getName());
-
-			if (!dir.exists()) {
-				boolean create = dir.mkdirs();
-				if (!create) {
-					Toast.makeText(context,
-							"Ordner konnte nicht erstellt werden!",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-
-			builder.setProgress(0, 0, true);
-			manager.notify(id, builder.build());
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			if (!isCancelled()) {
-				FileService service = FileService.getInstance();
-
-				try {
-					((Activity) context).runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(context, R.string.start_download,
-									Toast.LENGTH_SHORT).show();
-						}
-					});
-
-					service.downloadFile(item.getPath(), item.getName(),
-							context);
-				} catch (final IOException e) {
-					manager.cancel(id);
-					((Activity) context).runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							AlertDialog.Builder builder = new AlertDialog.Builder(
-									context);
-							builder.setTitle("IOException");
-							builder.setMessage(e.getMessage());
-							builder.setNeutralButton(android.R.string.cancel,
-									new OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											dialog.dismiss();
-										}
-									});
-							builder.create().show();
-						}
-					});
-				}
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			String extension = MimeTypeMap.getFileExtensionFromUrl(file
-					.getAbsolutePath());
-			String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-					extension);
-
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setDataAndType(Uri.fromFile(file), mime);
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-					intent, 0);
-
-			builder.setAutoCancel(true);
-			builder.setContentTitle(context
-					.getString(R.string.download_complete));
-			builder.setProgress(0, 0, false);
-			builder.setSmallIcon(R.drawable.menuitem_checkbox_on);
-			builder.setContentIntent(pendingIntent);
-			manager.notify(id, builder.build());
-		}
-	}
-
 	private class FileRenameTask extends ProgressDialogTask<FileItem, Void> {
 		private String newName;
 
@@ -320,7 +204,7 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 	public void doRename(final FileItem item) {
 		final EditText input = new EditText(getActivity());
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Umbennen");
+		builder.setTitle("Umbenennen");
 		builder.setMessage("Neuer Dateiname");
 		builder.setView(input);
 		builder.setNegativeButton("Abbrechen",
@@ -335,7 +219,7 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 			public void onClick(DialogInterface dialog, int which) {
 				String newName = input.getText().toString();
 				if (newName.length() == 0) {
-					Toast.makeText(getActivity(), "Ungültiger Dateiname",
+					Toast.makeText(getActivity(), "UngÃ¼ltiger Dateiname",
 							Toast.LENGTH_SHORT).show();
 				} else {
 					new FileRenameTask(getActivity(),
@@ -351,7 +235,7 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 	public void doDelete(final FileItem item) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Hinweis");
-		builder.setMessage("Sind Sie sicher das Sie die folgende Datei löschen möchten?\n\n"
+		builder.setMessage("Sind Sie sicher das Sie die folgende Datei lÃ¶schen mÃ¶chten?\n\n"
 				+ item.getName());
 		builder.setNegativeButton("Abbrechen",
 				new DialogInterface.OnClickListener() {
@@ -364,11 +248,16 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				new FileDeleteTask(getActivity(), "Datei wird gelöscht...")
+				new FileDeleteTask(getActivity(), "Datei wird gelÃ¶scht...")
 						.execute(item);
 				getActivity().onBackPressed();
 			}
 		});
 		builder.create().show();
+	}
+
+	private void doDownload(FileItem item) {
+		new FileDownloadTask(getActivity(), item.getName()).execute(item
+				.getPath());
 	}
 }
