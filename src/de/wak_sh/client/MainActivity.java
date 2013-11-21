@@ -1,5 +1,6 @@
 package de.wak_sh.client;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -39,12 +41,13 @@ public class MainActivity extends SherlockFragmentActivity {
 	private List<NavigationDrawerItem> mDrawerItems;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
+	private static File fileToUpload;
 
 	private final OnItemClickListener mDrawerClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			selectItem(position);
+			selectItem(position, null);
 		}
 	};
 
@@ -53,6 +56,15 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		initSharedPreferences();
+
+		Intent i = getIntent();
+		if (i != null) {
+			String action = i.getAction();
+			if (action != null && Intent.ACTION_SEND.equals(action)) {
+				Uri uri = i.getParcelableExtra(Intent.EXTRA_STREAM);
+				fileToUpload = new File(uri.getPath());
+			}
+		}
 
 		if (!DataService.getInstance().isLoggedIn()) {
 			Intent intent = new Intent(this, LoginActivity.class);
@@ -103,7 +115,14 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
+			selectItem(0, null);
+		}
+
+		if (fileToUpload != null) {
+			Bundle args = new Bundle();
+			args.putString("fileToUploadPath", fileToUpload.getAbsolutePath());
+			selectItem(3, args);
+			fileToUpload = null;
 		}
 	}
 
@@ -175,8 +194,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		finish();
 	}
 
-	protected void selectItem(int position) {
+	protected void selectItem(int position, Bundle arguments) {
 		Fragment fragment = mDrawerItems.get(position).getFragment();
+		if (arguments != null) {
+			fragment.setArguments(arguments);
+		}
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.popBackStack(null,

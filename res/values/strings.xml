@@ -5,6 +5,8 @@
     <string name="drawer_open">Menü öffnen</string>
     <string name="drawer_close">Menü schließen</string>
     <string name="app_close_text">Möchten Sie die Anwendung wirklich beenden?</string>
-    <string name="file_upload">Datei Hochladen</string>
+    <string name="file_upload">Datei hochladen</string>
+    <string name="error">Fehler</string>
+    <string name="invalid_filename">Ungültiger Dateiname</string>
 
 </resources>

@@ -13,7 +13,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import de.wak_sh.client.R;
 import de.wak_sh.client.SettingsActivity;
 import de.wak_sh.client.backend.FileDownloadTask;
@@ -32,11 +37,14 @@ import de.wak_sh.client.backend.adapters.FileItemArrayAdapter.FragmentInterface;
 import de.wak_sh.client.backend.model.FileItem;
 import de.wak_sh.client.backend.service.FileService;
 
-public class DateiablageFragment extends Fragment implements FragmentInterface {
+public class DateiablageFragment extends SherlockFragment implements
+		FragmentInterface {
 
 	private FileItemArrayAdapter adapter;
 	private List<FileItem> items = new ArrayList<FileItem>();
 	private String path;
+	private static String fileToUploadPath;
+	private MenuItem menuItemUploadFile;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,14 +58,41 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 		listView.setAdapter(adapter);
 
 		if (getArguments() != null) {
-			path = getArguments().getString("path");
+			if (getArguments().containsKey("path")) {
+				path = getArguments().getString("path");
+			}
+			if (getArguments().containsKey("fileToUploadPath")) {
+				fileToUploadPath = getArguments().getString("fileToUploadPath");
+			}
 		}
 
 		if (items.isEmpty()) {
 			new FileResolveTask(getActivity()).execute();
 		}
 
+		setHasOptionsMenu(true);
+
 		return rootView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_dateiablage, menu);
+		menuItemUploadFile = menu.getItem(0);
+		menuItemUploadFile.setVisible(false);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menuitem_upload_file) {
+			if (menuItemUploadFile.isVisible()) {
+				new FileUploadPermissionChecker(getSherlockActivity(),
+						getString(R.string.check_permission)).execute();
+			}
+			return true;
+		}
+		return false;
 	}
 
 	private OnItemClickListener clickListener = new OnItemClickListener() {
@@ -77,19 +112,17 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 				if (file.exists()) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							getActivity());
-					builder.setTitle("Hinweis");
-					builder.setMessage(String
-							.format("Die Datei '%s' ist bereits vorhanden. Soll sie ersetzt werden?",
-									item.getName()));
+					builder.setTitle(R.string.hint);
+					builder.setMessage(String.format(
+							getString(R.string.file_exists), item.getName()));
 					builder.setPositiveButton(android.R.string.yes,
 							new OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int which) {
 									if (!file.delete()) {
-										Toast.makeText(
-												getActivity(),
-												"Datei konnte nicht gelöscht werden!",
+										Toast.makeText(getActivity(),
+												R.string.can_not_delete,
 												Toast.LENGTH_SHORT).show();
 									}
 									dialog.dismiss();
@@ -141,7 +174,19 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 				if (path == null) {
 					list = service.getMountpoints();
 				} else {
+
 					list = service.getFileItems(path);
+					getSherlockActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if (fileToUploadPath != null) {
+								menuItemUploadFile.setVisible(true);
+							} else {
+								menuItemUploadFile.setVisible(false);
+							}
+						}
+					});
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -200,59 +245,136 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 		}
 	}
 
+	private class FileUploadTask extends ProgressDialogTask<Void, Void> {
+
+		public FileUploadTask(Context context, String text) {
+			super(context, text);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				FileService.getInstance().uploadFile("/" + path,
+						new File(fileToUploadPath));
+				fileToUploadPath = null;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			getSherlockActivity().finish();
+		}
+	}
+
+	private class FileUploadPermissionChecker extends
+			ProgressDialogTask<Void, Boolean> {
+
+		public FileUploadPermissionChecker(Context context, String text) {
+			super(context, text);
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... args) {
+			try {
+				return FileService.getInstance().canUploadFile("/" + path);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			if (result) {
+				new FileUploadTask(getSherlockActivity(),
+						getString(R.string.upload_process)).execute();
+			} else {
+				getSherlockActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						AlertDialog.Builder builder = new AlertDialog.Builder(
+								getSherlockActivity());
+						builder.setTitle(R.string.error);
+						builder.setMessage(R.string.no_rights);
+						builder.setNeutralButton(android.R.string.ok,
+								new OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
+									}
+								});
+						builder.create().show();
+					}
+				});
+			}
+		}
+
+	}
+
 	@Override
 	public void doRename(final FileItem item) {
 		final EditText input = new EditText(getActivity());
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Umbenennen");
-		builder.setMessage("Neuer Dateiname");
+		builder.setTitle(R.string.rename);
+		builder.setMessage(R.string.new_filename);
 		builder.setView(input);
-		builder.setNegativeButton("Abbrechen",
+		builder.setNegativeButton(android.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
 				});
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				String newName = input.getText().toString();
-				if (newName.length() == 0) {
-					Toast.makeText(getActivity(), "Ungültiger Dateiname",
-							Toast.LENGTH_SHORT).show();
-				} else {
-					new FileRenameTask(getActivity(),
-							"Datei wird umbenannt...", newName).execute(item);
-					getActivity().onBackPressed();
-				}
-			}
-		});
+		builder.setPositiveButton(android.R.string.ok,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String newName = input.getText().toString();
+						if (newName.length() == 0) {
+							Toast.makeText(getActivity(),
+									R.string.invalid_filename,
+									Toast.LENGTH_SHORT).show();
+						} else {
+							new FileRenameTask(getActivity(),
+									getString(R.string.rename_process), newName)
+									.execute(item);
+							getActivity().onBackPressed();
+						}
+					}
+				});
 		builder.create().show();
 	}
 
 	@Override
 	public void doDelete(final FileItem item) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Hinweis");
-		builder.setMessage("Sind Sie sicher das Sie die folgende Datei löschen möchten?\n\n"
-				+ item.getName());
-		builder.setNegativeButton("Abbrechen",
+		builder.setTitle(R.string.hint);
+		builder.setMessage(String.format(
+				getString(R.string.delete_confirmation), item.getName()));
+		builder.setNegativeButton(android.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
 				});
-		builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				new FileDeleteTask(getActivity(), "Datei wird gelöscht...")
-						.execute(item);
-				getActivity().onBackPressed();
-			}
-		});
+		builder.setPositiveButton(android.R.string.yes,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						new FileDeleteTask(getActivity(),
+								getString(R.string.delete_process))
+								.execute(item);
+						getActivity().onBackPressed();
+					}
+				});
 		builder.create().show();
 	}
 
@@ -260,4 +382,5 @@ public class DateiablageFragment extends Fragment implements FragmentInterface {
 		new FileDownloadTask(getActivity(), item.getName()).execute(item
 				.getPath());
 	}
+
 }

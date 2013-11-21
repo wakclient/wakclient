@@ -2,8 +2,6 @@ package de.wak_sh.client.backend.adapters;
 
 import java.util.List;
 
-import de.wak_sh.client.R;
-import de.wak_sh.client.backend.model.FileItem;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import de.wak_sh.client.R;
+import de.wak_sh.client.backend.model.FileItem;
 
 public class FileItemArrayAdapter extends ArrayAdapter<FileItem> implements
 		OnClickListener {
@@ -65,24 +65,23 @@ public class FileItemArrayAdapter extends ArrayAdapter<FileItem> implements
 	@Override
 	public void onClick(View view) {
 		int index = (Integer) view.getTag();
-		String[] operations = { "Löschen", "Umbenennen" };
-
 		final FileItem item = getItem(index);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setItems(operations, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				switch (which) {
-				case 0:
-					fragmentInterface.doDelete(item);
-					break;
-				case 1:
-					fragmentInterface.doRename(item);
-					break;
-				}
-			}
-		});
+		builder.setItems(R.array.file_operations,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							fragmentInterface.doDelete(item);
+							break;
+						case 1:
+							fragmentInterface.doRename(item);
+							break;
+						}
+					}
+				});
 		builder.create().show();
 	}
 

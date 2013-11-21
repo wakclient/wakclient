@@ -101,6 +101,11 @@ public class FileService {
 		return items;
 	}
 
+	public boolean canUploadFile(String url) throws IOException {
+		String page = service.fetchPage(url);
+		return page.contains("name=\"uploadfile\"");
+	}
+
 	public void downloadFile(String url, String filename, Context context)
 			throws IOException {
 		SharedPreferences prefs = PreferenceManager
@@ -108,7 +113,7 @@ public class FileService {
 		String dirPath = prefs.getString(
 				SettingsActivity.PREF_STORAGE_LOCATION, "/");
 
-		String content = service.downloadFile(url);
+		String content = service.fetchPage("/" + url);
 		OutputStream os = new FileOutputStream(new File(dirPath + "/"
 				+ filename));
 		for (int i = 0; i < content.length(); i++) {
@@ -116,6 +121,10 @@ public class FileService {
 		}
 
 		os.close();
+	}
+
+	public void uploadFile(String url, File file) throws IOException {
+		service.uploadFile(url, file);
 	}
 
 	public void deleteFile(FileItem item) throws IOException {
