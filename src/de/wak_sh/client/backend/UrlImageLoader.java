@@ -39,6 +39,7 @@ public class UrlImageLoader extends AsyncTask<String, Void, Bitmap> {
 		}
 
 		if (bmp == null) {
+
 			try {
 				InputStream is = new URL(url).openStream();
 				bmp = BitmapFactory.decodeStream(is);
