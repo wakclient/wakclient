@@ -34,6 +34,7 @@ import de.wak_sh.client.Utils;
  * Parts of this file are based on the work of Patrick Gotthard:
  * http://www.patrick-gotthard.de/4659/wakclient
  */
+@SuppressWarnings("deprecation")
 public class DataService {
 	private static final String BASE_URL = "https://www.wak-sh.de";
 
@@ -207,7 +208,6 @@ public class DataService {
 		return gradesPage;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void uploadFile(String url, File file) throws IOException {
 		HttpPost post = new HttpPost(BASE_URL + url);
 		MultipartEntity entity = new MultipartEntity();
