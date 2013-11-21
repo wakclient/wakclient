@@ -42,8 +42,16 @@ public class NachrichtSchreibenFragment extends SherlockFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		System.out.println(item);
-		return true;
+		switch (item.getItemId()) {
+		case R.id.menuitem_mailattachment:
+			// TODO: attach file?
+			return true;
+		case R.id.menuitem_sendmessage:
+			// TODO: send message
+			return true;
+		default:
+			return false;
+		}
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.util.SparseArray;
 import de.wak_sh.client.Utils;
 import de.wak_sh.client.backend.model.Message;
 
@@ -27,6 +28,7 @@ public class MessageService {
 
 	private DataService dataService;
 	private List<Message> messages;
+	private SparseArray<String> recipients;
 
 	private MessageService() {
 		dataService = DataService.getInstance();
@@ -63,12 +65,27 @@ public class MessageService {
 		}
 	}
 
+	public void fetchMessageRecipients() throws IOException {
+		String regex = "option value=\"(\\d+)\">(.*?)</";
+		List<String[]> matches = Utils.matchAll(regex,
+				dataService.getRecipientPage());
+		recipients = new SparseArray<String>();
+		for (String[] match : matches) {
+			System.out.println(match[0] + "=" + match[1]);
+			recipients.put(Integer.parseInt(match[0]), match[1]);
+		}
+	}
+
 	public List<Message> getMessages() {
 		return messages;
 	}
 
 	public Message getMessage(int index) {
 		return messages.get(index);
+	}
+
+	public SparseArray<String> getRecipients() {
+		return recipients;
 	}
 
 	public static String buildAttachmentUrl(int msgId, int attachmentId) {

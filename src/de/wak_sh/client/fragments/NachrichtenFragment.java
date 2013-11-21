@@ -80,6 +80,7 @@ public class NachrichtenFragment extends SherlockFragment {
 			MessageService service = MessageService.getInstance();
 			try {
 				service.fetchMessages();
+				service.fetchMessageRecipients();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

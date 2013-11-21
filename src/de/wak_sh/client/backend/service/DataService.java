@@ -61,6 +61,7 @@ public class DataService {
 	private String newsPage;
 	private String fileDepotPage;
 	private String gradesPage;
+	private String recipientPage;
 
 	private DataService() {
 		loggedIn = false;
@@ -192,6 +193,13 @@ public class DataService {
 			newsPage = fetchPage("/c_email.html");
 		}
 		return newsPage;
+	}
+
+	public String getRecipientPage() throws IOException {
+		if (recipientPage == null) {
+			recipientPage = fetchPage("/89.html");
+		}
+		return recipientPage;
 	}
 
 	public String getFileDepotPage() throws IOException {
