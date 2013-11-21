@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -128,6 +129,12 @@ public class DataService {
 			throws IOException {
 		HttpPost request = new HttpPost(BASE_URL + path);
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters);
+		request.setEntity(entity);
+		return execute(request);
+	}
+
+	private String post(String path, FileEntity entity) throws IOException {
+		HttpPost request = new HttpPost(BASE_URL + path);
 		request.setEntity(entity);
 		return execute(request);
 	}
