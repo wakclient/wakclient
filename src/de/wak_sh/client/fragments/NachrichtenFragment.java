@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.ProgressDialogTask;
@@ -27,16 +29,13 @@ import de.wak_sh.client.backend.service.MessageService;
 public class NachrichtenFragment extends SherlockFragment {
 	protected List<Message> messages = new ArrayList<Message>();
 	protected ListView listView;
+	private MessageArrayAdapter adapter;
 
 	private OnItemClickListener clickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			Bundle bundle = new Bundle();
-			bundle.putInt("msgid", (int) id);
-
-			NachrichtLesenFragment fragment = new NachrichtLesenFragment();
-			fragment.setArguments(bundle);
+			Fragment fragment = NachrichtLesenFragment.newInstance((int) id);
 
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction()
@@ -44,7 +43,6 @@ public class NachrichtenFragment extends SherlockFragment {
 					.commit();
 		}
 	};
-	private MessageArrayAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +104,21 @@ public class NachrichtenFragment extends SherlockFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.nachrichten_menu, menu);
-
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menuitem_newmessage) {
+			Fragment fragment = new NachrichtSchreibenFragment();
+
+			FragmentManager fragmentManager = getFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).addToBackStack(null)
+					.commit();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

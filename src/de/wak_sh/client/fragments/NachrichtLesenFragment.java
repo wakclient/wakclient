@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +32,16 @@ public class NachrichtLesenFragment extends SherlockFragment {
 	private TextView attachment;
 	private LinearLayout attachmentList;
 	private Message message;
+
+	public static Fragment newInstance(int msgId) {
+		NachrichtLesenFragment f = new NachrichtLesenFragment();
+
+		Bundle args = new Bundle();
+		args.putInt("msgid", msgId);
+		f.setArguments(args);
+
+		return f;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
