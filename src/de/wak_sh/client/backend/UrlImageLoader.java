@@ -34,24 +34,30 @@ public class UrlImageLoader extends AsyncTask<String, Void, Bitmap> {
 		Bitmap bmp = null;
 		url = params[0];
 
-		try {
-			InputStream is = new URL(url).openStream();
-			bmp = BitmapFactory.decodeStream(is);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+		if (bitmapCacheRef != null) {
+			bmp = bitmapCacheRef.get().get(url);
 		}
 
-		if (bmp != null && bitmapCacheRef != null) {
-			LruCache<String, Bitmap> cache = bitmapCacheRef.get();
-			if (cache != null) {
-				cache.put(url, bmp);
+		if (bmp == null) {
+			try {
+				InputStream is = new URL(url).openStream();
+				bmp = BitmapFactory.decodeStream(is);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return null;
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				return null;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+			if (bmp != null && bitmapCacheRef != null) {
+				LruCache<String, Bitmap> cache = bitmapCacheRef.get();
+				if (cache != null) {
+					cache.put(url, bmp);
+				}
 			}
 		}
 
