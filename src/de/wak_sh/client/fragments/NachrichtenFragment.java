@@ -29,16 +29,13 @@ import de.wak_sh.client.backend.service.MessageService;
 public class NachrichtenFragment extends SherlockFragment {
 	protected List<Message> messages = new ArrayList<Message>();
 	protected ListView listView;
+	private MessageArrayAdapter adapter;
 
 	private OnItemClickListener clickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			Bundle bundle = new Bundle();
-			bundle.putInt("msgid", (int) id);
-
-			NachrichtLesenFragment fragment = new NachrichtLesenFragment();
-			fragment.setArguments(bundle);
+			Fragment fragment = NachrichtLesenFragment.newInstance((int) id);
 
 			FragmentManager fragmentManager = getFragmentManager();
 			fragmentManager.beginTransaction()
@@ -46,7 +43,6 @@ public class NachrichtenFragment extends SherlockFragment {
 					.commit();
 		}
 	};
-	private MessageArrayAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
