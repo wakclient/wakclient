@@ -38,14 +38,17 @@ public class FileService {
 
 	private List<FileItem> fetchMountpoints() throws IOException {
 		List<FileItem> items = new ArrayList<FileItem>();
-		String regex = "<a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;mountpoint=\\d*)\".*?>(.*?)</a>";
+		String regex = "<td><img src=\"(.*?)\".*?<a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;mountpoint=\\d*)\".*?>(.*?)</a>";
 
 		List<String[]> points = Utils.matchAll(regex,
 				service.getFileDepotPage());
 
 		for (String[] point : points) {
-			FileItem item = new FileItem(point[1], point[0].replaceAll("amp;",
-					""), "", false);
+			String name = point[2];
+			String path = point[1].replaceAll("amp;", "");
+			String iconPath = point[0];
+
+			FileItem item = new FileItem(name, path, "", iconPath, false);
 			items.add(item);
 		}
 
@@ -54,8 +57,8 @@ public class FileService {
 
 	private List<FileItem> fetchItems(String path) throws IOException {
 		List<FileItem> items = new ArrayList<FileItem>();
-		String regexFolders = "<td><a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;dir=.*?\\&amp;mountpoint=\\d*).*?\">(.*?)</a><br.*?<span class=\"info\">(.*?)</span>";
-		String regexFiles = "<td><a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;filename=.*?task=download\\&amp;mountpoint=\\d*).*?\">(.*?)</a><br.*?<span class=\"info\">(.*?)</span>";
+		String regexFolders = "<img src=\".*?\" align=\"top\" /><img src=\"(.*?)\" /></td><td><a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;dir=.*?\\&amp;mountpoint=\\d*).*?\">(.*?)</a><br.*?<span class=\"info\">(.*?)</span>";
+		String regexFiles = "<a href=\".*?\" class=\"filelink\"><img src=\"(.*?)\" border=\"0\" /></a></td><td><a href=\"(c_dateiablage.html\\?\\&amp;no_cache=1\\&amp;filename=.*?task=download\\&amp;mountpoint=\\d*).*?\">(.*?)</a><br.*?<span class=\"info\">(.*?)</span>";
 
 		String site = service.fetchPage("/" + path);
 
@@ -63,19 +66,26 @@ public class FileService {
 		List<String[]> files = Utils.matchAll(regexFiles, site);
 
 		for (String[] folder : folders) {
-			FileItem item = new FileItem(folder[1], folder[0].replaceAll(
-					"amp;", ""), folder[2], false);
+			String date = folder[3];
+			String name = folder[2];
+			String _path = folder[1].replaceAll("amp;", "");
+			String iconPath = folder[0];
 
+			FileItem item = new FileItem(name, _path, date, iconPath, false);
 			items.add(item);
 		}
 
 		for (String[] file : files) {
-			FileItem item = new FileItem(file[1],
-					file[0].replaceAll("amp;", ""), file[2], true);
+			String date = file[3];
+			String name = file[2];
+			String _path = file[1].replaceAll("amp;", "");
+			String iconPath = file[0];
 
-			String deletePattern = file[0].replace("task=download",
+			FileItem item = new FileItem(name, _path, date, iconPath, true);
+
+			String deletePattern = file[1].replace("task=download",
 					"task=delete");
-			String renamePattern = file[0].replace("task=download",
+			String renamePattern = file[1].replace("task=download",
 					"task=rename");
 
 			if (site.contains(deletePattern) || site.contains(renamePattern)) {

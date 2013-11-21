@@ -4,14 +4,17 @@ public class FileItem {
 	private String name;
 	private String path;
 	private String date;
+	private String iconPath;
 	private boolean file;
 	private boolean owner;
 
-	public FileItem(String name, String path, String date, boolean file) {
+	public FileItem(String name, String path, String date, String iconPath,
+			boolean file) {
 		super();
 		this.name = name;
 		this.path = path;
 		this.date = date;
+		this.iconPath = iconPath;
 		this.file = file;
 	}
 
@@ -37,6 +40,14 @@ public class FileItem {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getIconPath() {
+		return iconPath;
+	}
+
+	public void setIconPath(String iconPath) {
+		this.iconPath = iconPath;
 	}
 
 	public boolean isFile() {

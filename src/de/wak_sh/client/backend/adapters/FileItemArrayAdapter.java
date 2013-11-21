@@ -5,20 +5,25 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import de.wak_sh.client.R;
+import de.wak_sh.client.backend.UrlImageLoader;
 import de.wak_sh.client.backend.model.FileItem;
 
 public class FileItemArrayAdapter extends ArrayAdapter<FileItem> implements
 		OnClickListener {
 
 	private FragmentInterface fragmentInterface;
+	private LruCache<String, Bitmap> bitmapCache;
 
 	public interface FragmentInterface {
 		public void doRename(FileItem item);
@@ -30,6 +35,15 @@ public class FileItemArrayAdapter extends ArrayAdapter<FileItem> implements
 			FragmentInterface fragmentInterface) {
 		super(context, 0, objects);
 		this.fragmentInterface = fragmentInterface;
+
+		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+		final int cacheSize = maxMemory / 8;
+		bitmapCache = new LruCache<String, Bitmap>(cacheSize) {
+			@Override
+			protected int sizeOf(String key, Bitmap value) {
+				return (value.getWidth() * value.getHeight()) / 1024;
+			}
+		};
 	}
 
 	@Override
@@ -43,6 +57,8 @@ public class FileItemArrayAdapter extends ArrayAdapter<FileItem> implements
 
 		FileItem item = getItem(position);
 
+		ImageView image = (ImageView) convertView
+				.findViewById(R.id.imageView_icon);
 		TextView text = (TextView) convertView.findViewById(R.id.file_name);
 		TextView date = (TextView) convertView.findViewById(R.id.file_date);
 		Button button = (Button) convertView.findViewById(R.id.file_actions);
@@ -57,6 +73,15 @@ public class FileItemArrayAdapter extends ArrayAdapter<FileItem> implements
 			button.setOnClickListener(this);
 		} else {
 			button.setBackgroundResource(0);
+		}
+
+		Bitmap bmpGame = bitmapCache.get("http://www.wak-sh.de/"
+				+ item.getIconPath());
+		if (bmpGame != null) {
+			image.setImageBitmap(bmpGame);
+		} else {
+			new UrlImageLoader(image, bitmapCache)
+					.execute("http://www.wak-sh.de/" + item.getIconPath());
 		}
 
 		return convertView;
