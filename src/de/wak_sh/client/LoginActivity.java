@@ -185,6 +185,7 @@ public class LoginActivity extends Activity {
 
 			SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
 			preferences.edit().clear().commit();
+			dataService.reset();
 
 			try {
 				dataService.logout();

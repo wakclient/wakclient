@@ -240,4 +240,8 @@ public class DataService {
 		return post("/index.php", params);
 	}
 
+	public void reset() {
+		instance = new DataService();
+	}
+
 }

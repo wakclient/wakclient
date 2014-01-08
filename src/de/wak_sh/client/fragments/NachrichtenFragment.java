@@ -54,17 +54,12 @@ public class NachrichtenFragment extends SherlockFragment {
 		listView.setOnItemClickListener(clickListener);
 		adapter = new MessageArrayAdapter(getActivity(), messages);
 		listView.setAdapter(adapter);
+
+		new MessageTask(getActivity()).execute();
+
 		setHasOptionsMenu(true);
 		return rootView;
 
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (messages.isEmpty()) {
-			new MessageTask(activity).execute();
-		}
 	}
 
 	private class MessageTask extends ProgressDialogTask<Void, Void> {

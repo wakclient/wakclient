@@ -38,11 +38,7 @@ public class NotenuebersichtFragment extends Fragment {
 		textCredits = (TextView) rootView
 				.findViewById(R.id.txt_overall_credits);
 
-		if (moduleService != null) {
-			populateUi();
-		} else {
-			new GradesTask(getActivity()).execute();
-		}
+		new GradesTask(getActivity()).execute();
 
 		return rootView;
 	}

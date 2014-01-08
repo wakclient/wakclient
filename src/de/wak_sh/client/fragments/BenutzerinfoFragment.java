@@ -64,11 +64,7 @@ public class BenutzerinfoFragment extends Fragment {
 				.findViewById(R.id.text_matrikelnummer);
 		matrikelnummer.setOnClickListener(onClickMatrikelnummer);
 
-		if (userInformation != null) {
-			populateUi();
-		} else {
-			new UserInfoTask(getActivity()).execute();
-		}
+		new UserInfoTask(getActivity()).execute();
 
 		return rootView;
 	}
