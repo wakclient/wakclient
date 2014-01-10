@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.model.Message;
@@ -38,6 +39,16 @@ public class MessageArrayAdapter extends ArrayAdapter<Message> {
 				.getSender());
 		((TextView) view.findViewById(R.id.msg_list_subject)).setText(message
 				.getSubject());
+		if (message.hasAttachment()) {
+			((ImageView) view.findViewById(R.id.msg_list_attachment))
+					.setImageResource(R.drawable.ic_menu_attachment_holo_light);
+			view.findViewById(R.id.msg_list_attachment).setVisibility(
+					View.VISIBLE);
+			view.findViewById(R.id.msg_list_attachment).setTag(message.getId());
+		} else {
+			((ImageView) view.findViewById(R.id.msg_list_attachment))
+					.setImageResource(0);
+		}
 
 		return view;
 	}

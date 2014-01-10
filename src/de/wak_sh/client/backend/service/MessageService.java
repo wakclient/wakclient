@@ -36,15 +36,18 @@ public class MessageService {
 	}
 
 	public void fetchMessages() throws IOException {
-		String regex = "single&msg_uid=(\\d+).*?\">(.*?)<.*?<td>(.*?)</td>.*?<td>(.*?)&";
+		String regex = "(messages_(un)?read).*?<td>(<img.*?messages_attachment)?.*?single&msg_uid=(\\d+).*?\">(.*?)<.*?<td>(.*?)</td>.*?<td>(.*?)&";
 		List<String[]> nachrichten = Utils.matchAll(regex,
 				dataService.getMessagesPage());
 		for (String[] nachricht : nachrichten) {
-			int id = Integer.parseInt(nachricht[0]);
-			String subject = nachricht[1];
-			String date = nachricht[2];
-			String sender = nachricht[3];
-			messages.add(new Message(id, date, sender, subject));
+			boolean read = (nachricht[1] == null);
+			boolean attachment = (nachricht[2] != null);
+			int id = Integer.parseInt(nachricht[3]);
+			String subject = nachricht[4];
+			String date = nachricht[5];
+			String sender = nachricht[6];
+			messages.add(new Message(id, date, sender, subject, read,
+					attachment));
 		}
 	}
 
@@ -71,7 +74,6 @@ public class MessageService {
 				dataService.getRecipientPage());
 		recipients = new SparseArray<String>();
 		for (String[] match : matches) {
-			System.out.println(match[0] + "=" + match[1]);
 			recipients.put(Integer.parseInt(match[0]), match[1]);
 		}
 	}

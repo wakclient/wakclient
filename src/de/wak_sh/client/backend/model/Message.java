@@ -10,14 +10,19 @@ public class Message {
 	private String sender;
 	private String subject;
 	private String content;
+	private boolean read;
+	private boolean attachment;
 	private List<String> attachmentFilenames;
 	private List<Integer> attachmentIds;
 
-	public Message(int id, String date, String sender, String subject) {
+	public Message(int id, String date, String sender, String subject,
+			boolean read, boolean attachment) {
 		this.id = id;
 		this.date = date;
 		this.sender = sender;
 		this.subject = subject;
+		this.read = read;
+		this.attachment = attachment;
 		attachmentFilenames = new ArrayList<String>();
 		attachmentIds = new ArrayList<Integer>();
 	}
@@ -42,8 +47,20 @@ public class Message {
 		return subject;
 	}
 
+	public boolean hasAttachment() {
+		return attachment;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
 	}
 
 	public void addAttachment(int id, String filename) {
