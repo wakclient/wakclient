@@ -1,21 +1,15 @@
 package de.wak_sh.client;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -27,115 +21,79 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import de.wak_sh.client.backend.adapters.NavigationDrawerAdapter;
-import de.wak_sh.client.backend.adapters.NavigationDrawerItem;
-import de.wak_sh.client.backend.service.DataService;
-import de.wak_sh.client.fragments.BenutzerinfoFragment;
-import de.wak_sh.client.fragments.DateiablageFragment;
-import de.wak_sh.client.fragments.NachrichtenFragment;
-import de.wak_sh.client.fragments.NotenuebersichtFragment;
+import de.wak_sh.client.backend.AdapterDrawerItems;
+import de.wak_sh.client.fragments.FragmentEmails;
+import de.wak_sh.client.fragments.FragmentFileStorage;
+import de.wak_sh.client.fragments.FragmentModules;
+import de.wak_sh.client.fragments.FragmentUserInformation;
+import de.wak_sh.client.fragments.WakFragment;
+import de.wak_sh.client.model.DrawerItem;
+import de.wak_sh.client.service.JsoupDataService;
 
 public class MainActivity extends SherlockFragmentActivity {
-	public static final String ACTION_LOGOUT = "de.wak_sh.client.ACTION_LOGOUT";
-	private ListView mDrawerList;
-	private List<NavigationDrawerItem> mDrawerItems;
-	private DrawerLayout mDrawerLayout;
-	private ActionBarDrawerToggle mDrawerToggle;
-	private static File fileToUpload;
 
-	private final OnItemClickListener mDrawerClickListener = new OnItemClickListener() {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			selectItem(position, null);
-		}
-	};
+	private JsoupDataService mDataService;
+
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerListView;
+	private ActionBarDrawerToggle mDrawerToggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-		initSharedPreferences();
+		mDataService = JsoupDataService.getInstance();
 
-		Intent i = getIntent();
-		if (i != null) {
-			String action = i.getAction();
-			if (action != null && Intent.ACTION_SEND.equals(action)) {
-				Uri uri = i.getParcelableExtra(Intent.EXTRA_STREAM);
-				fileToUpload = new File(uri.getPath());
-			}
-		}
-
-		if (!DataService.getInstance().isLoggedIn()) {
+		if (!mDataService.isLoggedIn()) {
 			Intent intent = new Intent(this, LoginActivity.class);
 			startActivity(intent);
 			finish();
 			return;
 		}
 
-		setContentView(R.layout.activity_main);
-
-		mDrawerItems = new ArrayList<NavigationDrawerItem>();
-		mDrawerItems.add(new NavigationDrawerItem(R.string.benutzerinfo,
-				R.drawable.ic_menu_home, new BenutzerinfoFragment()));
-		mDrawerItems
-				.add(new NavigationDrawerItem(R.string.nachrichten,
-						android.R.drawable.sym_action_email,
-						new NachrichtenFragment()));
-		mDrawerItems.add(new NavigationDrawerItem(R.string.notenuebersicht,
-				R.drawable.ic_menu_mark, new NotenuebersichtFragment()));
-		mDrawerItems.add(new NavigationDrawerItem(R.string.dateiablage,
-				R.drawable.ic_menu_archive, new DateiablageFragment()));
-
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerListView = (ListView) findViewById(android.R.id.list);
+		mDrawerToggle = new DrawerLayoutActionBarToggle();
 
-		mDrawerList.setAdapter(new NavigationDrawerAdapter(this, mDrawerItems));
-		mDrawerList.setOnItemClickListener(mDrawerClickListener);
+		List<DrawerItem> drawerItems = new ArrayList<DrawerItem>();
+		drawerItems.add(new DrawerItem(R.drawable.ic_menu_home,
+				getString(R.string.user_information)));
+		drawerItems.add(new DrawerItem(android.R.drawable.sym_action_email,
+				getString(R.string.emails)));
+		drawerItems.add(new DrawerItem(R.drawable.ic_menu_archive,
+				getString(R.string.file_storage)));
+		drawerItems.add(new DrawerItem(R.drawable.ic_menu_mark,
+				getString(R.string.overview_grades)));
 
+		mDrawerListView.setAdapter(new AdapterDrawerItems(MainActivity.this,
+				drawerItems));
+		mDrawerListView.setOnItemClickListener(new DrawerLayoutClickListener());
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 
+		Bundle bundle = new Bundle();
+		bundle.putString("title", getString(R.string.user_information));
+		bundle.putInt("iconRes", R.drawable.ic_menu_home);
+
+		Fragment fragment = new FragmentUserInformation();
+		fragment.setArguments(bundle);
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.content_frame, fragment, WakFragment.TAG);
+		ft.commit();
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, R.string.drawer_open,
-				R.string.drawer_close) {
-			@Override
-			public void onDrawerOpened(View drawerView) {
-				getSupportActionBar().setTitle(R.string.app_name);
-			}
-
-			@Override
-			public void onDrawerClosed(View drawerView) {
-				getSupportActionBar().setTitle(getTitle());
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		if (savedInstanceState == null) {
-			selectItem(0, null);
-		}
-
-		if (fileToUpload != null) {
-			Bundle args = new Bundle();
-			args.putString("fileToUploadPath", fileToUpload.getAbsolutePath());
-			selectItem(3, args);
-			fileToUpload = null;
-		}
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		mDrawerToggle.syncState();
+		getSupportActionBar().setTitle(R.string.user_information);
+		getSupportActionBar().setIcon(R.drawable.ic_menu_home);
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		mDrawerToggle.syncState();
+		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override
@@ -146,80 +104,106 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
+
 		switch (item.getItemId()) {
-		// XXX: Workaround until ABS supports ActionBarDrawerToggle
 		case android.R.id.home:
-			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-				mDrawerLayout.closeDrawer(mDrawerList);
+			if (mDrawerLayout.isDrawerOpen(mDrawerListView)) {
+				mDrawerLayout.closeDrawer(mDrawerListView);
 			} else {
-				mDrawerLayout.openDrawer(mDrawerList);
+				mDrawerLayout.openDrawer(mDrawerListView);
 			}
 			return true;
 		case R.id.action_logout:
-			logout();
-			return true;
-		case R.id.action_settings:
-			Intent intent = new Intent(this, SettingsActivity.class);
+			intent = new Intent(this, LoginActivity.class);
+			intent.putExtra("logout", true);
 			startActivity(intent);
 			return true;
-
-		default:
-			return super.onOptionsItemSelected(item);
+		case R.id.action_settings:
+			intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
 		}
+
+		return false;
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (!getSupportFragmentManager().popBackStackImmediate()) {
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setMessage(R.string.app_close_text)
-					.setPositiveButton(android.R.string.yes,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									finish();
-								}
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		mDrawerToggle.syncState();
+	}
 
-							}).setNegativeButton(android.R.string.no, null)
-					.show();
+	private class DrawerLayoutActionBarToggle extends ActionBarDrawerToggle {
+
+		public DrawerLayoutActionBarToggle() {
+			super(MainActivity.this, mDrawerLayout, R.drawable.ic_drawer,
+					R.string.drawer_open, R.string.drawer_close);
+		}
+
+		@Override
+		public void onDrawerOpened(View drawerView) {
+			getSupportActionBar().setIcon(R.drawable.ic_launcher);
+			getSupportActionBar().setTitle(R.string.app_name);
+			supportInvalidateOptionsMenu();
+		}
+
+		@Override
+		public void onDrawerClosed(View drawerView) {
+			WakFragment fragment = (WakFragment) getSupportFragmentManager()
+					.findFragmentByTag(WakFragment.TAG);
+			getSupportActionBar().setTitle(fragment.getTitle());
+			getSupportActionBar().setIcon(fragment.getIconRes());
+			supportInvalidateOptionsMenu();
 		}
 	}
 
-	private void logout() {
-		Intent intent = new Intent(this, LoginActivity.class);
-		intent.putExtra(ACTION_LOGOUT, "logout");
-		startActivity(intent);
-		finish();
-	}
-
-	protected void selectItem(int position, Bundle arguments) {
-		Fragment fragment = mDrawerItems.get(position).getFragment();
-		if (arguments != null) {
-			fragment.setArguments(arguments);
+	private class DrawerLayoutClickListener implements OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
 		}
 
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.popBackStack(null,
-				FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
+		private void selectItem(int position) {
+			Fragment fragment = null;
+			Bundle bundle = new Bundle();
 
-		mDrawerList.setItemChecked(position, true);
+			switch (position) {
+			case 0:
+				fragment = new FragmentUserInformation();
+				bundle.putString("title", getString(R.string.user_information));
+				bundle.putInt("iconRes", R.drawable.ic_menu_home);
+				break;
+			case 1:
+				fragment = new FragmentEmails();
+				bundle.putString("title", getString(R.string.emails));
+				bundle.putInt("iconRes", android.R.drawable.sym_action_email);
+				break;
+			case 2:
+				fragment = new FragmentFileStorage();
+				bundle.putString("title", getString(R.string.file_storage));
+				bundle.putInt("iconRes", R.drawable.ic_menu_archive);
+				break;
+			case 3:
+				fragment = new FragmentModules();
+				bundle.putString("title", getString(R.string.overview_grades));
+				bundle.putInt("iconRes", R.drawable.ic_menu_mark);
+				break;
+			}
 
-		setTitle(mDrawerItems.get(position).getTitleId());
-		mDrawerLayout.closeDrawer(mDrawerList);
-	}
+			fragment.setArguments(bundle);
 
-	private void initSharedPreferences() {
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		if (!preferences.contains(SettingsActivity.PREF_STORAGE_LOCATION)) {
-			SharedPreferences.Editor editor = preferences.edit();
-			editor.putString(SettingsActivity.PREF_STORAGE_LOCATION,
-					Environment.getExternalStorageDirectory() + "/Download/");
-			editor.commit();
+			FragmentManager manager = getSupportFragmentManager();
+			manager.popBackStack();
+
+			FragmentTransaction transaction = manager.beginTransaction();
+			transaction.replace(R.id.content_frame, fragment, WakFragment.TAG);
+			transaction.commit();
+
+			mDrawerListView.setItemChecked(position, true);
+			mDrawerLayout.closeDrawer(mDrawerListView);
 		}
 	}
+
 }

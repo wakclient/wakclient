@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/editText_recipients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/to"
+        android:inputType="none" />
+
+    <EditText
+        android:id="@+id/editText_subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/subject"
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:id="@+id/editText_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/message"
+        android:inputType="textMultiLine" />
+
+</LinearLayout>

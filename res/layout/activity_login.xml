@@ -1,38 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LoginFormContainer"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".LoginActivity" >
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/editText_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/prompt_email"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:singleLine="true" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/editText_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/prompt_password"
-        android:imeActionId="@+id/login"
-        android:imeActionLabel="@string/action_sign_in"
+        android:hint="@string/password"
+        android:imeActionId="@+id/action_login"
+        android:imeActionLabel="Anmelden"
         android:imeOptions="actionUnspecified"
         android:inputType="textPassword"
         android:maxLines="1"
         android:singleLine="true" />
 
     <Button
-        android:id="@+id/sign_in_button"
+        android:id="@+id/button_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginTop="16dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="@string/action_sign_in" />
+        android:text="@string/sign_in" />
 
 </LinearLayout>

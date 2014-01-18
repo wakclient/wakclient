@@ -1,12 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WAK-Client</string>
+    <string name="title_activity_login">Anmeldung</string>
+    <string name="title_activity_recipients">Empfänger</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    
+    <string name="emails">E-Mails</string>
     <string name="drawer_open">Menü öffnen</string>
     <string name="drawer_close">Menü schließen</string>
-    <string name="app_close_text">Möchten Sie die Anwendung wirklich beenden?</string>
-    <string name="file_upload">Datei hochladen</string>
-    <string name="error">Fehler</string>
-    <string name="invalid_filename">Ungültiger Dateiname</string>
+    <string name="search">Suchen</string>
+    <string name="download_incomplete">Download fehlgeschlagen</string>
+    <string name="semester1">1. Semester</string>
+    <string name="semester2">2. Semester</string>
+    <string name="semester3">3. Semester</string>
+    <string name="semester4">4. Semester</string>
+    <string name="semester5">5. Semester</string>
+    <string name="semester6">6. Semester</string>
+   	<string name="missing_username">Benutzername fehlt</string>
+   	<string name="missing_password">Passwort fehlt</string>
+   	<string name="attachment_add">Anhang hinzufügen</string>
+    
+    
+    <string name="app_name">Wak-SH Client</string>
+    
+    <string name="email">E-Mail</string>
+    <string name="password">Passwort</string>
+    <string name="sign_in">Anmelden</string>
+    <string name="login_progress_signing_in">Anmeldung läuft&#8230;</string>
+    <string name="login_progress_signing_out">Abmeldung läuft&#8230;</string>
+    
+    <string name="logout">Abmelden</string>
+    <string name="overview_grades">Notenübersicht</string>
+    <string name="messages">Nachrichten</string>
+    <string name="user_information">Informationen</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="file_storage">Dateiablage</string>
+    <string name="settings">Einstellungen</string>
+    
+    
+    <string name="pref_header_storage">Speicher</string>
+    <string name="pref_title_storage_location">Speicherort</string>
+    <string name="pref_description_storage_location">Ordnerpfad in dem die heruntergeladenen Dateien gespeichert werden</string>
+    
+    <string name="fetching_user_info">Hole Benutzerdaten</string>
+    <string name="username">Benutzername:</string>
+    <string name="study_course">Studiengang:</string>
+    <string name="study_group">Studiengruppe:</string>
+    <string name="student_number">Matrikelnummer:</string>
+    <string name="student_number_copied">Matrikelnummer in die Zwischenablage kopiert</string>
+    
+    <string name="delete">Löschen</string>
+    <string name="rename">Umbenennen</string>
+    <string name="fetching_filesystem">Lade Dateisystem&#8230;</string>
+    <string name="download">Download</string>
+    <string name="download_complete">Download abgeschlossen</string>
+    <string name="start_download">Starte Download&#8230;</string>
+    <string name="hint">Hinweis</string>
+    <string name="can_not_delete">Datei konnte nicht gelöscht werden</string>
+    <string name="upload_process">Datei wird hochgeladen&#8230;</string>
+    <string name="no_rights">Sie besitzen keine Berechtigung um in diesen Ordner Dateien hochzuladen.</string>
+    <string name="new_filename">Neuer Dateiname</string>
+    <string name="rename_process">Datei wird umbenannt&#8230;</string>
+    <string name="delete_process">Datei wird gelöscht&#8230;</string>
+    <string name="check_permission">Überprüfe Berechtigungen&#8230;</string>
+    <string name="delete_confirmation">Sind Sie sicher das Sie die folgende Datei löschen möchten?\n\n%1$s</string>
 
+    <string-array name="file_operations">
+        <item>Löschen</item>
+        <item>Umbenennen</item>
+    </string-array>
+    
+    <string name="subject">Betreff</string>
+    <string name="from">Von</string>
+    <string name="fetching_messages">Hole Nachrichten</string>
+    <string name="fetching_message">Hole Nachrichtendaten</string>
+    <string name="answer">Antworten</string>
+    <string name="to">An</string>
+    <string name="email_write">E-Mail schreiben</string>
+  	<string name="email_send">E-Mail senden</string>
+  
+  	<string name="fetching_grades">Hole Noten</string>
+    <string name="average">Durchschnitt:</string>
+    <string name="credits">Credits</string>
+    <string name="grade1">Note1</string>
+    <string name="grade2">Note2</string>
+    <string name="grade3">Note3</string>
+    <string name="credits_2">Credits:</string>
+    
+    <string name="attachment">Dateianhang</string>
+    
+    <string name="message">Nachricht</string>
 </resources>

@@ -1,8 +1,0 @@
-<resources>
-
-    <string name="title_activity_settings">Einstellungen</string>
-    <string name="pref_header_storage">Speicher</string>
-    <string name="pref_title_storage_location">Speicherort</string>
-    <string name="pref_description_storage_location">Ordnerpfad in dem die heruntergeladenen Dateien gespeichert werden</string>
-
-</resources>

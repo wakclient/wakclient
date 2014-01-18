@@ -2,59 +2,74 @@ package de.wak_sh.client;
 
 import java.io.IOException;
 
-import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import de.wak_sh.client.backend.ProgressDialogTask;
-import de.wak_sh.client.backend.service.DataService;
+import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
-public class LoginActivity extends Activity {
-	private UserLoginTask mAuthTask = null;
+import com.actionbarsherlock.app.SherlockActivity;
 
-	// Values for email and password at the time of the login attempt.
+import de.wak_sh.client.backend.DataStorage;
+import de.wak_sh.client.model.LoginResult;
+import de.wak_sh.client.service.JsoupDataService;
+
+public class LoginActivity extends SherlockActivity {
+
+	private JsoupDataService mDataService;
+	private LoginTask mLoginTask;
+
 	private String mEmail;
 	private String mPassword;
 
-	// UI references.
-	private EditText mEmailView;
-	private EditText mPasswordView;
+	private EditText mEditTextEmail;
+	private EditText mEditTextPassword;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_login);
 
-		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-		Intent intent = getIntent();
-		if (intent.getExtras() != null
-				&& intent.getExtras().getString(MainActivity.ACTION_LOGOUT) != null) {
-			new UserLogoutTask().execute();
+		mDataService = JsoupDataService.getInstance();
+
+		mEditTextEmail = (EditText) findViewById(R.id.editText_email);
+		mEditTextPassword = (EditText) findViewById(R.id.editText_password);
+		Button buttonSignIn = (Button) findViewById(R.id.button_sign_in);
+
+		if (getIntent().getExtras() != null
+				&& getIntent().getExtras().getBoolean("logout")) {
+			new LogoutTask().execute();
 		} else {
-			mEmail = preferences.getString("email", null);
-			mPassword = preferences.getString("password", null);
+			SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+			mEmail = prefs.getString("email", null);
+			mPassword = prefs.getString("password", null);
 		}
 
-		// Set up the login form.
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		mEditTextEmail.setText(mEmail);
+		mEditTextPassword.setText(mPassword);
 
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView.setText(mPassword);
-		mPasswordView
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		if (mEmail != null && mPassword != null) {
+			attemptLogin();
+		}
+
+		mEditTextPassword
+				.setOnEditorActionListener(new OnEditorActionListener() {
 					@Override
-					public boolean onEditorAction(TextView textView, int id,
-							KeyEvent keyEvent) {
-						if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					public boolean onEditorAction(TextView v, int actionId,
+							KeyEvent event) {
+						if (actionId == R.id.action_login
+								|| actionId == EditorInfo.IME_NULL) {
 							attemptLogin();
 							return true;
 						}
@@ -62,136 +77,150 @@ public class LoginActivity extends Activity {
 					}
 				});
 
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogin();
-					}
-				});
-
-		if (mEmail != null && mPassword != null) {
-			attemptLogin();
-		}
+		buttonSignIn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				attemptLogin();
+			}
+		});
 	}
 
-	/**
-	 * Attempts to sign in or register the account specified by the login form.
-	 * If there are form errors (invalid email, missing fields, etc.), the
-	 * errors are presented and no actual login attempt is made.
-	 */
-	public void attemptLogin() {
-		if (mAuthTask != null) {
+	private void attemptLogin() {
+		if (mLoginTask != null) {
 			return;
 		}
 
-		// Reset errors.
-		mEmailView.setError(null);
-		mPasswordView.setError(null);
+		mEditTextEmail.setError(null);
+		mEditTextPassword.setError(null);
 
-		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
-		mPassword = mPasswordView.getText().toString();
+		mEmail = mEditTextEmail.getText().toString();
+		mPassword = mEditTextPassword.getText().toString();
 
 		boolean cancel = false;
 		View focusView = null;
 
-		// Check for a valid password.
-		if (TextUtils.isEmpty(mPassword)) {
-			mPasswordView.setError(getString(R.string.error_field_required));
-			focusView = mPasswordView;
-			cancel = true;
-		}
-
-		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
+		if (mEmail.length() == 0) {
+			mEditTextEmail.setError(getString(R.string.missing_username));
+			focusView = mEditTextEmail;
 			cancel = true;
 		} else if (!mEmail.contains("@")) {
 			mEmail = mEmail + "@berufsakademie-sh.de";
-			mEmailView.setText(mEmail);
+			mEditTextEmail.setText(mEmail);
+		}
+
+		if (mPassword.length() == 0) {
+			mEditTextPassword.setError(getString(R.string.missing_password));
+			focusView = mEditTextPassword;
+			cancel = true;
 		}
 
 		if (cancel) {
-			// There was an error; don't attempt login and focus the first
-			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Kick off a background task to perform the user login attempt.
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute();
+			mLoginTask = new LoginTask();
+			mLoginTask.execute();
 		}
 	}
 
-	/**
-	 * Represents an asynchronous login task used to authenticate the user.
-	 */
-	public class UserLoginTask extends ProgressDialogTask<Void, Boolean> {
-		public UserLoginTask() {
-			super(LoginActivity.this,
-					getString(R.string.login_progress_signing_in));
+	private class LoginTask extends AsyncTask<Void, Void, LoginResult>
+			implements OnCancelListener {
+
+		private ProgressDialog mProgressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			mProgressDialog = new ProgressDialog(LoginActivity.this);
+			mProgressDialog.setCancelable(true);
+			mProgressDialog.setOnCancelListener(this);
+			mProgressDialog
+					.setMessage(getString(R.string.login_progress_signing_in));
+			mProgressDialog.show();
 		}
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			DataService dataService = DataService.getInstance();
-
+		protected LoginResult doInBackground(Void... arg0) {
 			try {
-				return dataService.login(mEmail, mPassword);
+				return mDataService.login(mEmail, mPassword);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return false;
 			}
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean success) {
-			super.onPostExecute(success);
-			mAuthTask = null;
+		protected void onPostExecute(LoginResult result) {
+			mLoginTask = null;
 
-			if (success) {
-				SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-				preferences.edit().putString("email", mEmail)
-						.putString("password", mPassword).commit();
-				Intent intent = new Intent(getApplicationContext(),
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+
+			if (result.isLoggedIn()) {
+				SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putString("email", mEmail);
+				editor.putString("password", mPassword);
+				editor.commit();
+
+				Intent intent = new Intent(LoginActivity.this,
 						MainActivity.class);
 				startActivity(intent);
 				finish();
 			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
+				Toast.makeText(LoginActivity.this, result.getErrorMessage(),
+						Toast.LENGTH_LONG).show();
+				mEditTextPassword.requestFocus();
 			}
 		}
 
 		@Override
 		protected void onCancelled() {
-			super.onCancelled();
-			mAuthTask = null;
+			mLoginTask = null;
 		}
+
+		@Override
+		public void onCancel(DialogInterface dialog) {
+			mLoginTask.cancel(true);
+		}
+
 	}
 
-	public class UserLogoutTask extends ProgressDialogTask<Void, Void> {
-		public UserLogoutTask() {
-			super(LoginActivity.this,
-					getString(R.string.login_progress_signing_out));
+	private class LogoutTask extends AsyncTask<Void, Void, Void> {
+
+		private ProgressDialog mProgressDialog;
+
+		@Override
+		protected void onPreExecute() {
+			mProgressDialog = new ProgressDialog(LoginActivity.this);
+			mProgressDialog.setCancelable(false);
+			mProgressDialog.setCanceledOnTouchOutside(false);
+			mProgressDialog
+					.setMessage(getString(R.string.login_progress_signing_out));
+			mProgressDialog.show();
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			DataService dataService = DataService.getInstance();
-
-			SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
-			preferences.edit().clear().commit();
-			dataService.reset();
-
 			try {
-				dataService.logout();
+				JsoupDataService.getInstance().logout();
+				SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.clear();
+				editor.commit();
+
+				DataStorage.getInstance().clear();
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			return null;
 		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+		}
+
 	}
 }

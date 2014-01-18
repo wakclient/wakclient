@@ -2,18 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/action_refresh"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_refresh"/>
-    <item
         android:id="@+id/action_logout"
-        android:orderInCategory="300"
+        android:orderInCategory="1000"
         android:showAsAction="never"
-        android:title="@string/action_logout"/>
+        android:title="@string/logout"/>
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="200"
+        android:orderInCategory="900"
         android:showAsAction="never"
         android:title="@string/settings"/>
 
