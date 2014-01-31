@@ -60,7 +60,10 @@ public final class JsoupEmailService implements EmailService {
 			String[] recipientData = element.attr("title").split("/");
 			long id = Long.parseLong(recipientData[0]);
 			String name = element.text();
-			String location = recipientData[1];
+			String location = "Kein Ort gefunden";
+			if (recipientData.length > 1) {
+				location = recipientData[1];
+			}
 
 			recipients.add(new Recipient(id, name, location));
 		}
