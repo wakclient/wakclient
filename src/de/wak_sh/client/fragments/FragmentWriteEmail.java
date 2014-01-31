@@ -1,10 +1,12 @@
 package de.wak_sh.client.fragments;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,14 +21,18 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.wak_sh.client.R;
 import de.wak_sh.client.RecipientsActivity;
+import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.model.Email;
 import de.wak_sh.client.model.Recipient;
-import de.wak_sh.client.service.JsoupEmailService;
 
 public class FragmentWriteEmail extends WakFragment {
 
+	private static final int REQUEST_CODE_RECIPIENTS = 1;
+
 	private Email mEmail;
-	private List<Recipient> mRecipients;
+	private List<Recipient> mRecipients = new ArrayList<Recipient>();
+
+	private EditText mEditRecipients;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,14 +40,14 @@ public class FragmentWriteEmail extends WakFragment {
 		View rootView = inflater.inflate(R.layout.fragment_write_email,
 				container, false);
 
-		EditText editRecipients = (EditText) rootView
+		mEditRecipients = (EditText) rootView
 				.findViewById(R.id.editText_recipients);
 		EditText editSubject = (EditText) rootView
 				.findViewById(R.id.editText_subject);
 		EditText editMessage = (EditText) rootView
 				.findViewById(R.id.editText_message);
 
-		editRecipients.setOnTouchListener(touchListener);
+		mEditRecipients.setOnTouchListener(touchListener);
 
 		setHasOptionsMenu(true);
 
@@ -54,18 +60,29 @@ public class FragmentWriteEmail extends WakFragment {
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				Intent intent = new Intent(getActivity(),
 						RecipientsActivity.class);
-				startActivityForResult(intent, RecipientsActivity.REQUEST_CODE);
+				intent.putExtra("list", (Serializable) mRecipients);
+				startActivityForResult(intent, REQUEST_CODE_RECIPIENTS);
 				return true;
 			}
 			return false;
 		}
 	};
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == RecipientsActivity.REQUEST_CODE
+		if (requestCode == REQUEST_CODE_RECIPIENTS
 				&& resultCode == Activity.RESULT_OK) {
+			mRecipients = (List<Recipient>) data.getSerializableExtra("list");
 
+			StringBuilder builder = new StringBuilder();
+			for (Recipient recipient : mRecipients) {
+				builder.append(recipient.getName()).append("; ");
+			}
+
+			builder.replace(builder.length() - 2, builder.length(), "");
+
+			mEditRecipients.setText(builder.toString());
 		}
 	}
 
@@ -78,7 +95,7 @@ public class FragmentWriteEmail extends WakFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_send:
-			new EmailTask().execute();
+			new EmailTask(getActivity(), null, "Email senden...").execute();
 			break;
 		case R.id.action_add_attachment:
 
@@ -87,11 +104,15 @@ public class FragmentWriteEmail extends WakFragment {
 		return false;
 	}
 
-	private class EmailTask extends AsyncTask<Void, Void, Void> {
+	private class EmailTask extends ProgressTask<Void, Void, Void> {
+
+		public EmailTask(Context context, String title, String message) {
+			super(context, title, message);
+		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			JsoupEmailService.getInstance().sendEmail(mEmail, mRecipients);
+			// JsoupEmailService.getInstance().sendEmail(mEmail, mRecipients);
 			return null;
 		}
 
