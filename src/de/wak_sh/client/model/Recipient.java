@@ -1,6 +1,10 @@
 package de.wak_sh.client.model;
 
-public class Recipient {
+import java.io.Serializable;
+
+public class Recipient implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private long id;
 	private String name;
 	private String location;
