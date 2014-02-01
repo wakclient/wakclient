@@ -3,8 +3,7 @@ package de.wak_sh.client.fragments;
 import java.io.IOException;
 import java.util.List;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.DataStorage;
+import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.fragments.backend.AdapterEmails;
 import de.wak_sh.client.model.Email;
 import de.wak_sh.client.service.JsoupEmailService;
@@ -42,7 +42,7 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 		mListView.setOnItemClickListener(this);
 
 		if (mStorage.getEmails().isEmpty()) {
-			new EmailTask().execute();
+			new EmailTask(getActivity(), null, "Hole Nachrichten...").execute();
 		} else {
 			updateViews();
 		}
@@ -81,6 +81,9 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 					R.drawable.ic_launcher);
 
 			return true;
+		} else if (item.getItemId() == R.id.action_refresh) {
+			new EmailTask(getActivity(), null, "Hole Nachrichten...").execute();
+			return true;
 		}
 		return false;
 	}
@@ -112,16 +115,10 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 		transaction.commit();
 	}
 
-	private class EmailTask extends AsyncTask<Void, Void, List<Email>> {
-		private ProgressDialog mProgressDialog;
+	private class EmailTask extends ProgressTask<Void, Void, List<Email>> {
 
-		@Override
-		protected void onPreExecute() {
-			mProgressDialog = new ProgressDialog(getActivity());
-			mProgressDialog.setMessage(getString(R.string.fetching_messages));
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog.show();
+		public EmailTask(Context context, String title, String message) {
+			super(context, title, message);
 		}
 
 		@Override
@@ -136,9 +133,7 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 
 		@Override
 		protected void onPostExecute(List<Email> result) {
-			if (mProgressDialog != null && mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
-			}
+			super.onPostExecute(result);
 
 			if (result != null) {
 				mStorage.setEmails(result);
