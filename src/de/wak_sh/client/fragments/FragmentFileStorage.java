@@ -61,7 +61,7 @@ public class FragmentFileStorage extends WakFragment implements
 				: mAdapterFileLinks);
 
 		if (mAdapterMountpoints.isEmpty() && mAdapterFileLinks.isEmpty()) {
-			new FileStorageTask(getActivity(), null, "Lade Dateisystem...",
+			new FileStorageTask(getActivity(), null, "Hole Dateien...",
 					listView).execute();
 		}
 

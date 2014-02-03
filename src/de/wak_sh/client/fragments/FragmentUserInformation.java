@@ -2,8 +2,7 @@ package de.wak_sh.client.fragments;
 
 import java.io.IOException;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.DataStorage;
+import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.model.UserInformation;
 import de.wak_sh.client.service.JsoupUserInformationService;
 
@@ -38,7 +38,8 @@ public class FragmentUserInformation extends WakFragment {
 		mTextStudy = (TextView) rootView.findViewById(R.id.textView_study);
 
 		if (mStorage.getUserInformation() == null) {
-			new UserInformationTask().execute();
+			new UserInformationTask(getActivity(), null,
+					"Hole Benutzerinformationen...").execute();
 		} else {
 			updateViews();
 		}
@@ -66,16 +67,9 @@ public class FragmentUserInformation extends WakFragment {
 	}
 
 	private class UserInformationTask extends
-			AsyncTask<Void, Void, UserInformation> {
-		private ProgressDialog mProgressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			mProgressDialog = new ProgressDialog(getActivity());
-			mProgressDialog.setMessage(getString(R.string.fetching_user_info));
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog.show();
+			ProgressTask<Void, Void, UserInformation> {
+		public UserInformationTask(Context context, String title, String message) {
+			super(context, title, message);
 		}
 
 		@Override
@@ -91,9 +85,7 @@ public class FragmentUserInformation extends WakFragment {
 
 		@Override
 		protected void onPostExecute(UserInformation result) {
-			if (mProgressDialog != null && mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
-			}
+			super.onPostExecute(result);
 
 			if (result != null) {
 				mStorage.setUserInformation(result);

@@ -3,8 +3,7 @@ package de.wak_sh.client.fragments;
 import java.io.IOException;
 import java.util.List;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.DataStorage;
+import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.fragments.backend.AdapterModules;
 import de.wak_sh.client.model.Module;
 import de.wak_sh.client.service.JsoupModuleService;
@@ -37,7 +37,7 @@ public class FragmentModules extends WakFragment {
 		mTextCredits = (TextView) rootView.findViewById(R.id.textView_credits);
 
 		if (mStorage.getModules().isEmpty()) {
-			new ModulesTask().execute();
+			new ModulesTask(getActivity(), null, "Hole Noten...").execute();
 		} else {
 			updateViews();
 		}
@@ -60,17 +60,10 @@ public class FragmentModules extends WakFragment {
 		mTextAverage.setText("" + (average / credits));
 	}
 
-	private class ModulesTask extends AsyncTask<Void, Void, List<Module>> {
+	private class ModulesTask extends ProgressTask<Void, Void, List<Module>> {
 
-		private ProgressDialog mProgressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			mProgressDialog = new ProgressDialog(getActivity());
-			mProgressDialog.setMessage(getString(R.string.fetching_grades));
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog.show();
+		public ModulesTask(Context context, String title, String message) {
+			super(context, title, message);
 		}
 
 		@Override
@@ -85,9 +78,7 @@ public class FragmentModules extends WakFragment {
 
 		@Override
 		protected void onPostExecute(List<Module> result) {
-			if (mProgressDialog != null && mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
-			}
+			super.onPostExecute(result);
 
 			if (result != null) {
 				mStorage.setModules(result);

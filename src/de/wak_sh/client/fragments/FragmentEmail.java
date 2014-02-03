@@ -2,8 +2,7 @@ package de.wak_sh.client.fragments;
 
 import java.io.IOException;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import com.actionbarsherlock.view.MenuInflater;
 
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.FileDownloader;
+import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.model.Attachment;
 import de.wak_sh.client.model.Email;
 import de.wak_sh.client.service.JsoupDataService;
@@ -50,7 +50,7 @@ public class FragmentEmail extends WakFragment {
 		mLayoutAttachmentList = (LinearLayout) rootView
 				.findViewById(R.id.layout_attachment_list);
 
-		new EmailTask().execute(email);
+		new EmailTask(getActivity(), null, "Hole Nachricht...").execute(email);
 
 		setHasOptionsMenu(true);
 
@@ -62,17 +62,10 @@ public class FragmentEmail extends WakFragment {
 		inflater.inflate(R.menu.emails, menu);
 	}
 
-	private class EmailTask extends AsyncTask<Email, Void, Email> {
+	private class EmailTask extends ProgressTask<Email, Void, Email> {
 
-		private ProgressDialog mProgressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			mProgressDialog = new ProgressDialog(getActivity());
-			mProgressDialog.setMessage(getString(R.string.fetching_message));
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog.show();
+		public EmailTask(Context context, String title, String message) {
+			super(context, title, message);
 		}
 
 		@Override
@@ -88,9 +81,7 @@ public class FragmentEmail extends WakFragment {
 
 		@Override
 		protected void onPostExecute(final Email result) {
-			if (mProgressDialog != null && mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
-			}
+			super.onPostExecute(result);
 
 			if (result != null) {
 				mTextFrom.setText(Html.fromHtml(result.getFrom()));
