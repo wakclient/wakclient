@@ -2,12 +2,18 @@ package de.wak_sh.client.fragments;
 
 import java.io.IOException;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.DataStorage;
 import de.wak_sh.client.backend.ProgressTask;
@@ -37,6 +43,8 @@ public class FragmentUserInformation extends WakFragment {
 				.findViewById(R.id.textView_student_group);
 		mTextStudy = (TextView) rootView.findViewById(R.id.textView_study);
 
+		mTextStudentNumber.setOnClickListener(onClickStudentNumber);
+
 		if (mStorage.getUserInformation() == null) {
 			new UserInformationTask(getActivity(), null,
 					"Hole Benutzerinformationen...").execute();
@@ -65,6 +73,27 @@ public class FragmentUserInformation extends WakFragment {
 
 		mTextStudy.setText(study);
 	}
+
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
+	private OnClickListener onClickStudentNumber = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				ClipboardManager clipboard = (ClipboardManager) getActivity()
+						.getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText("Matrikelnummer",
+						mTextStudentNumber.getText());
+				clipboard.setPrimaryClip(clip);
+			} else {
+				android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) getActivity()
+						.getSystemService(Context.CLIPBOARD_SERVICE);
+				clipboardManager.setText(mTextStudentNumber.getText());
+			}
+			Toast.makeText(getActivity(), "Matrikelnummer kopiert",
+					Toast.LENGTH_SHORT).show();
+		}
+	};
 
 	private class UserInformationTask extends
 			ProgressTask<Void, Void, UserInformation> {
