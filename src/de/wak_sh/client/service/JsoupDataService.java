@@ -84,7 +84,7 @@ public final class JsoupDataService {
 	}
 
 	public void logout() throws IOException {
-		Jsoup.connect(BASE_URL + "/431.hmtl").timeout(0).get();
+		Jsoup.connect(BASE_URL + "/431.html").timeout(0).get();
 	}
 
 	public Connection connect(String url, Connection.Method method,
@@ -120,14 +120,14 @@ public final class JsoupDataService {
 		HttpURLConnection conn = (HttpURLConnection) new URL(url)
 				.openConnection();
 		conn.addRequestProperty("Connection", "Keep-Alive");
-		conn.addRequestProperty("Content-Type", "multipart/form-data");
+		conn.addRequestProperty("Content-Type",
+				"multipart/form-data; boundary=*****");
 		conn.addRequestProperty("Cookie", COOKIE_NAME + "=" + cookie);
 		conn.setRequestMethod("POST");
 		conn.setDoInput(true);
 		conn.setDoOutput(true);
 		conn.setUseCaches(false);
 		conn.setChunkedStreamingMode(1024);
-		conn.connect();
 
 		return conn.getOutputStream();
 	}

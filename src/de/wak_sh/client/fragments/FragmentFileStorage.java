@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,8 +18,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.FileDownloader;
+import de.wak_sh.client.backend.FileUploader;
+import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.fragments.backend.AdapterFileLinks;
 import de.wak_sh.client.fragments.backend.AdapterMountpoints;
 import de.wak_sh.client.model.FileLink;
@@ -53,10 +61,40 @@ public class FragmentFileStorage extends WakFragment implements
 				: mAdapterFileLinks);
 
 		if (mAdapterMountpoints.isEmpty() && mAdapterFileLinks.isEmpty()) {
-			new FileStorageTask(listView).execute();
+			new FileStorageTask(getActivity(), null, "Lade Dateisystem...",
+					listView).execute();
 		}
 
+		setHasOptionsMenu(true);
+
 		return rootView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if (mFileLink != null) {
+			inflater.inflate(R.menu.file_storage, menu);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_upload) {
+			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+			intent.setType("*/*");
+			startActivityForResult(intent, 101);
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK && data != null) {
+			String path = data.getData().getPath();
+			new FileUploader(getActivity()).upload(mFileLink, path);
+		}
 	}
 
 	@Override
@@ -93,22 +131,14 @@ public class FragmentFileStorage extends WakFragment implements
 	}
 
 	private class FileStorageTask extends
-			AsyncTask<Void, Void, ArrayAdapter<?>> {
+			ProgressTask<Void, Void, ArrayAdapter<?>> {
 
-		private ProgressDialog mProgressDialog;
 		private ListView mListView;
 
-		public FileStorageTask(ListView listView) {
+		public FileStorageTask(Context context, String title, String message,
+				ListView listView) {
+			super(context, title, message);
 			this.mListView = listView;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			mProgressDialog = new ProgressDialog(getActivity());
-			mProgressDialog.setMessage(getString(R.string.fetching_filesystem));
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog.show();
 		}
 
 		@Override
@@ -139,9 +169,7 @@ public class FragmentFileStorage extends WakFragment implements
 
 		@Override
 		protected void onPostExecute(ArrayAdapter<?> result) {
-			if (mProgressDialog != null && mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
-			}
+			super.onPostExecute(result);
 
 			if (result != null) {
 				mListView.setAdapter(result);
