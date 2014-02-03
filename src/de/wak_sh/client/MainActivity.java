@@ -1,11 +1,15 @@
 package de.wak_sh.client;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +54,17 @@ public class MainActivity extends SherlockFragmentActivity {
 			startActivity(intent);
 			finish();
 			return;
+		}
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		if (!prefs.contains(SettingsActivity.PREF_STORAGE_LOCATION)) {
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString(SettingsActivity.PREF_STORAGE_LOCATION,
+					Environment.getExternalStorageDirectory() + File.separator
+							+ "Download");
+			editor.commit();
 		}
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

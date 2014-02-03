@@ -11,11 +11,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 import de.wak_sh.client.R;
+import de.wak_sh.client.SettingsActivity;
 import de.wak_sh.client.model.FileLink;
 import de.wak_sh.client.service.JsoupFileService;
 
@@ -35,12 +39,22 @@ public class FileDownloader {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				String path = Environment.getExternalStorageDirectory()
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(mContext);
+
+				String path = prefs.getString(
+						SettingsActivity.PREF_STORAGE_LOCATION,
+						Environment.getExternalStorageDirectory()
+								+ File.separator + "Download")
 						+ File.separator + fileLink.getName();
 				buildNotification(fileLink.getName());
 
 				try {
-					FileOutputStream fos = new FileOutputStream(path);
+					System.out.println("path: " + path.replaceAll("\n", ""));
+					File file = new File(path.replaceAll("\n", ""));
+					file.createNewFile();
+
+					FileOutputStream fos = new FileOutputStream(file);
 
 					InputStream is = JsoupFileService.getInstance()
 							.getFileStream(fileLink);
@@ -58,6 +72,10 @@ public class FileDownloader {
 					bos.close();
 				} catch (IOException e) {
 					e.printStackTrace();
+					Toast.makeText(mContext,
+							"Möglicherweise ist der Downloadpfad ungültig",
+							Toast.LENGTH_LONG).show();
+					;
 					killNotification(null, false);
 					return;
 				}
