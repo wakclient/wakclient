@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -147,6 +149,25 @@ public class MainActivity extends SherlockFragmentActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!getSupportFragmentManager().popBackStackImmediate()) {
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setMessage("Möchten Sie die Anwendung wirklich beenden?")
+					.setPositiveButton(android.R.string.yes,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									finish();
+								}
+
+							}).setNegativeButton(android.R.string.no, null)
+					.show();
+		}
 	}
 
 	private class DrawerLayoutActionBarToggle extends ActionBarDrawerToggle {
