@@ -135,6 +135,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			intent = new Intent(this, LoginActivity.class);
 			intent.putExtra("logout", true);
 			startActivity(intent);
+			finish();
 			return true;
 		case R.id.action_settings:
 			intent = new Intent(this, SettingsActivity.class);
