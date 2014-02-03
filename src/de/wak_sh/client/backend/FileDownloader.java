@@ -50,7 +50,6 @@ public class FileDownloader {
 				buildNotification(fileLink.getName());
 
 				try {
-					System.out.println("path: " + path.replaceAll("\n", ""));
 					File file = new File(path.replaceAll("\n", ""));
 					file.createNewFile();
 
@@ -89,12 +88,21 @@ public class FileDownloader {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				String path = Environment.getExternalStorageDirectory()
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(mContext);
+
+				String path = prefs.getString(
+						SettingsActivity.PREF_STORAGE_LOCATION,
+						Environment.getExternalStorageDirectory()
+								+ File.separator + "Download")
 						+ File.separator + filename;
 				buildNotification(filename);
 
 				try {
-					FileOutputStream fos = new FileOutputStream(path);
+					File file = new File(path.replaceAll("\n", ""));
+					file.createNewFile();
+
+					FileOutputStream fos = new FileOutputStream(file);
 
 					InputStream is = JsoupFileService.getInstance()
 							.getFileStream(url);
