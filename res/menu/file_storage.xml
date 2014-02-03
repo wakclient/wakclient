@@ -6,6 +6,6 @@
         android:icon="@android:drawable/ic_menu_upload"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText"
-        android:title="Hochladen"/>
+        android:title="@string/upload"/>
 
 </menu>

@@ -95,7 +95,8 @@ public class FragmentWriteEmail extends WakFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_send:
-			new EmailTask(getActivity(), null, "Sende Email...").execute();
+			new EmailTask(getActivity(), null,
+					getString(R.string.email_send_process)).execute();
 			break;
 		case R.id.action_add_attachment:
 

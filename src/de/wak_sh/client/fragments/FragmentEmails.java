@@ -42,7 +42,8 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 		mListView.setOnItemClickListener(this);
 
 		if (mStorage.getEmails().isEmpty()) {
-			new EmailTask(getActivity(), null, "Hole Nachrichten...").execute();
+			new EmailTask(getActivity(), null,
+					getString(R.string.fetching_messages)).execute();
 		} else {
 			updateViews();
 		}
@@ -82,7 +83,8 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 
 			return true;
 		} else if (item.getItemId() == R.id.action_refresh) {
-			new EmailTask(getActivity(), null, "Hole Nachrichten...").execute();
+			new EmailTask(getActivity(), null,
+					getString(R.string.fetching_messages)).execute();
 			return true;
 		}
 		return false;

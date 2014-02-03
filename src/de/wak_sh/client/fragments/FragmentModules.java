@@ -37,7 +37,8 @@ public class FragmentModules extends WakFragment {
 		mTextCredits = (TextView) rootView.findViewById(R.id.textView_credits);
 
 		if (mStorage.getModules().isEmpty()) {
-			new ModulesTask(getActivity(), null, "Hole Noten...").execute();
+			new ModulesTask(getActivity(), null,
+					getString(R.string.fetching_grades)).execute();
 		} else {
 			updateViews();
 		}

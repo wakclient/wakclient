@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
+import de.wak_sh.client.R;
 import de.wak_sh.client.model.Recipient;
 
 public class SelectionDialogRecipient extends SherlockDialogFragment {
@@ -41,7 +42,7 @@ public class SelectionDialogRecipient extends SherlockDialogFragment {
 		}
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Empfänger auswählen");
+		builder.setTitle(R.string.select_recipient);
 		builder.setItems(items, new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

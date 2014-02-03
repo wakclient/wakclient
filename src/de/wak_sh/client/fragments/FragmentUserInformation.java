@@ -47,7 +47,7 @@ public class FragmentUserInformation extends WakFragment {
 
 		if (mStorage.getUserInformation() == null) {
 			new UserInformationTask(getActivity(), null,
-					"Hole Benutzerinformationen...").execute();
+					getString(R.string.fetching_user_info)).execute();
 		} else {
 			updateViews();
 		}
@@ -90,7 +90,7 @@ public class FragmentUserInformation extends WakFragment {
 						.getSystemService(Context.CLIPBOARD_SERVICE);
 				clipboardManager.setText(mTextStudentNumber.getText());
 			}
-			Toast.makeText(getActivity(), "Matrikelnummer kopiert",
+			Toast.makeText(getActivity(), R.string.student_number_copied,
 					Toast.LENGTH_SHORT).show();
 		}
 	};

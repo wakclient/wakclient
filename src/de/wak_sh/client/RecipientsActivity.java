@@ -64,7 +64,8 @@ public class RecipientsActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onQueryTextSubmit(String query) {
-		new SearchTask(this, null, "Suche Empfänger...").execute(query);
+		new SearchTask(this, null, getString(R.string.search_recipients))
+				.execute(query);
 		searchView.clearFocus();
 		return true;
 	}

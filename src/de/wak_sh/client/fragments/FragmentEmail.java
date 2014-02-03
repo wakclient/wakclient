@@ -50,7 +50,8 @@ public class FragmentEmail extends WakFragment {
 		mLayoutAttachmentList = (LinearLayout) rootView
 				.findViewById(R.id.layout_attachment_list);
 
-		new EmailTask(getActivity(), null, "Hole Nachricht...").execute(email);
+		new EmailTask(getActivity(), null, getString(R.string.fetching_message))
+				.execute(email);
 
 		setHasOptionsMenu(true);
 

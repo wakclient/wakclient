@@ -67,11 +67,13 @@ public class FileUploader {
 			PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
 					0, intent, 0);
 
-			mBuilder.setContentText("Upload fertiggestellt");
+			mBuilder.setContentText(mContext
+					.getString(R.string.upload_complete));
 			mBuilder.setSmallIcon(R.drawable.ic_menu_goto);
 			mBuilder.setContentIntent(pendingIntent);
 		} else {
-			mBuilder.setContentText("Upload fehlerhaft");
+			mBuilder.setContentText(mContext
+					.getString(R.string.upload_incomplete));
 			mBuilder.setSmallIcon(R.drawable.ic_menu_close_clear_cancel);
 		}
 

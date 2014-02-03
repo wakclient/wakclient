@@ -156,7 +156,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (!getSupportFragmentManager().popBackStackImmediate()) {
 			new AlertDialog.Builder(this)
 					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setMessage("Möchten Sie die Anwendung wirklich beenden?")
+					.setMessage(R.string.app_close_text)
 					.setPositiveButton(android.R.string.yes,
 							new DialogInterface.OnClickListener() {
 								@Override
