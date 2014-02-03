@@ -3,6 +3,7 @@ package de.wak_sh.client;
 import java.io.IOException;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 
 import de.wak_sh.client.backend.DataStorage;
+import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.model.LoginResult;
 import de.wak_sh.client.service.JsoupDataService;
 
@@ -49,7 +51,8 @@ public class LoginActivity extends SherlockActivity {
 
 		if (getIntent().getExtras() != null
 				&& getIntent().getExtras().getBoolean("logout")) {
-			new LogoutTask().execute();
+			new LogoutTask(this, null,
+					getString(R.string.login_progress_signing_out)).execute();
 		} else {
 			SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 			mEmail = prefs.getString("email", null);
@@ -185,18 +188,10 @@ public class LoginActivity extends SherlockActivity {
 
 	}
 
-	private class LogoutTask extends AsyncTask<Void, Void, Void> {
+	private class LogoutTask extends ProgressTask<Void, Void, Void> {
 
-		private ProgressDialog mProgressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			mProgressDialog = new ProgressDialog(LoginActivity.this);
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog
-					.setMessage(getString(R.string.login_progress_signing_out));
-			mProgressDialog.show();
+		public LogoutTask(Context context, String title, String message) {
+			super(context, title, message);
 		}
 
 		@Override
@@ -217,9 +212,7 @@ public class LoginActivity extends SherlockActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if (mProgressDialog != null && mProgressDialog.isShowing()) {
-				mProgressDialog.dismiss();
-			}
+			super.onPostExecute(result);
 		}
 
 	}
