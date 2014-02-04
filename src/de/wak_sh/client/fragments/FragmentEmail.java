@@ -12,10 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.FileDownloader;
 import de.wak_sh.client.backend.ProgressTask;
@@ -58,10 +54,10 @@ public class FragmentEmail extends WakFragment {
 		return rootView;
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.emails, menu);
-	}
+	// @Override
+	// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	// inflater.inflate(R.menu.emails, menu);
+	// }
 
 	private class EmailTask extends ProgressTask<Email, Void, Email> {
 

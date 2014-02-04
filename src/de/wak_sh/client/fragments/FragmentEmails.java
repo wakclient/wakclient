@@ -60,29 +60,30 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_write) {
-			Fragment fragment = new FragmentWriteEmail();
-
-			Bundle bundle = new Bundle();
-			bundle.putString("title", getString(R.string.email_write));
-			bundle.putInt("iconRes", R.drawable.ic_launcher);
-
-			fragment.setArguments(bundle);
-
-			FragmentManager manager = getFragmentManager();
-
-			FragmentTransaction transaction = manager.beginTransaction();
-			transaction.addToBackStack(null);
-			transaction.replace(R.id.content_frame, fragment, WakFragment.TAG);
-			transaction.commit();
-
-			getSherlockActivity().getSupportActionBar().setTitle(
-					getString(R.string.email_write));
-			getSherlockActivity().getSupportActionBar().setIcon(
-					R.drawable.ic_launcher);
-
-			return true;
-		} else if (item.getItemId() == R.id.action_refresh) {
+		// if (item.getItemId() == R.id.action_write) {
+		// Fragment fragment = new FragmentWriteEmail();
+		//
+		// Bundle bundle = new Bundle();
+		// bundle.putString("title", getString(R.string.email_write));
+		// bundle.putInt("iconRes", R.drawable.ic_launcher);
+		//
+		// fragment.setArguments(bundle);
+		//
+		// FragmentManager manager = getFragmentManager();
+		//
+		// FragmentTransaction transaction = manager.beginTransaction();
+		// transaction.addToBackStack(null);
+		// transaction.replace(R.id.content_frame, fragment, WakFragment.TAG);
+		// transaction.commit();
+		//
+		// getSherlockActivity().getSupportActionBar().setTitle(
+		// getString(R.string.email_write));
+		// getSherlockActivity().getSupportActionBar().setIcon(
+		// R.drawable.ic_launcher);
+		//
+		// return true;
+		// } else
+		if (item.getItemId() == R.id.action_refresh) {
 			new EmailTask(getActivity(), null,
 					getString(R.string.fetching_messages)).execute();
 			return true;

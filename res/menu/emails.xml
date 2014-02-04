@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
+   <!--  <item
         android:id="@+id/action_write"
         android:icon="@drawable/ic_menu_compose"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/email_write"/>
+        android:title="@string/email_write"/> -->
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="200"

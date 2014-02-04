@@ -18,11 +18,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.FileDownloader;
 import de.wak_sh.client.backend.FileUploader;
@@ -70,24 +65,24 @@ public class FragmentFileStorage extends WakFragment implements
 		return rootView;
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if (mFileLink != null) {
-			inflater.inflate(R.menu.file_storage, menu);
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_upload) {
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.setType("*/*");
-			startActivityForResult(intent, 101);
-			return true;
-		}
-
-		return false;
-	}
+	// @Override
+	// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	// if (mFileLink != null) {
+	// inflater.inflate(R.menu.file_storage, menu);
+	// }
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// if (item.getItemId() == R.id.action_upload) {
+	// Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+	// intent.setType("*/*");
+	// startActivityForResult(intent, 101);
+	// return true;
+	// }
+	//
+	// return false;
+	// }
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,89 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TableRow
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" >
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="80dp"
-            android:singleLine="true"
-            android:text="@string/username" />
+        <TableRow
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
 
-        <TextView
-            android:id="@+id/textView_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="80dp"
-            android:singleLine="true" />
-    </TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="80dp"
+                android:singleLine="true"
+                android:text="@string/username" />
 
-    <TableRow
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" >
+            <TextView
+                android:id="@+id/textView_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="80dp"
+                android:singleLine="true" />
+        </TableRow>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/study_course" />
+        <TableRow
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
 
-        <TextView
-            android:id="@+id/textView_study"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:singleLine="true" />
-    </TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/study_course" />
 
-    <TableRow
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" >
+            <TextView
+                android:id="@+id/textView_study"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:singleLine="true" />
+        </TableRow>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/study_group" />
+        <TableRow
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
 
-        <TextView
-            android:id="@+id/textView_student_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:singleLine="true" />
-    </TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/study_group" />
 
-    <TableRow
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" >
+            <TextView
+                android:id="@+id/textView_student_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:singleLine="true" />
+        </TableRow>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/student_number" />
+        <TableRow
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
 
-        <TextView
-            android:id="@+id/textView_student_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:drawableRight="@drawable/ic_menu_copy_holo_light"
-            android:singleLine="true" />
-    </TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/student_number" />
 
-</TableLayout>
+            <TextView
+                android:id="@+id/textView_student_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:drawableRight="@drawable/ic_menu_copy_holo_light"
+                android:singleLine="true" />
+        </TableRow>
+    </TableLayout>
+
+    <com.google.ads.AdView
+        android:id="@+id/ad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-1841421729149399/8198980469"
+        ads:loadAdOnCreate="true"
+        ads:testDevices="TEST_EMULATOR"
+        android:background="@color/abs__background_holo_dark" />
+
+</LinearLayout>

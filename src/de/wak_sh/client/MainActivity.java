@@ -26,6 +26,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import de.wak_sh.client.backend.AdapterDrawerItems;
 import de.wak_sh.client.fragments.FragmentEmails;
@@ -35,6 +36,7 @@ import de.wak_sh.client.fragments.FragmentUserInformation;
 import de.wak_sh.client.fragments.WakFragment;
 import de.wak_sh.client.model.DrawerItem;
 import de.wak_sh.client.service.JsoupDataService;
+import eu.ngls.articus.apprater.AppRater;
 
 public class MainActivity extends SherlockFragmentActivity {
 
@@ -43,6 +45,18 @@ public class MainActivity extends SherlockFragmentActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerListView;
 	private ActionBarDrawerToggle mDrawerToggle;
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +119,9 @@ public class MainActivity extends SherlockFragmentActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setTitle(R.string.user_information);
 		getSupportActionBar().setIcon(R.drawable.ic_menu_home);
+
+		AppRater.Configuration.title = getString(R.string.app_name);
+		AppRater.rateApp(MainActivity.this);
 	}
 
 	@Override
