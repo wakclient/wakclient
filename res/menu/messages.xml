@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_menu_compose"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/email_write"/> -->
+        android:title="@string/message_write"/> -->
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="200"

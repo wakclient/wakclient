@@ -15,7 +15,7 @@
         android:id="@+id/editText_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email"
+        android:hint="@string/message"
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:singleLine="true" />

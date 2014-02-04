@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Email implements Serializable {
+public class Message implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class Email implements Serializable {
 	private boolean attachment;
 	private List<Attachment> attachments;
 
-	public Email(long id, String from, String subject, String message,
+	public Message(long id, String from, String subject, String message,
 			String date, boolean read, boolean attachment) {
 		super();
 		this.id = id;
@@ -96,7 +96,7 @@ public class Email implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Email [id=" + id + ", from=" + from + ", subject=" + subject
+		return "Message [id=" + id + ", from=" + from + ", subject=" + subject
 				+ ", message=" + message + ", date=" + date + ", read=" + read
 				+ ", attachment=" + attachment + ", attachments=" + attachments
 				+ "]";

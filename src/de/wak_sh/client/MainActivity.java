@@ -29,7 +29,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import de.wak_sh.client.backend.AdapterDrawerItems;
-import de.wak_sh.client.fragments.FragmentEmails;
+import de.wak_sh.client.fragments.FragmentMessages;
 import de.wak_sh.client.fragments.FragmentFileStorage;
 import de.wak_sh.client.fragments.FragmentModules;
 import de.wak_sh.client.fragments.FragmentUserInformation;
@@ -91,7 +91,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		drawerItems.add(new DrawerItem(R.drawable.ic_menu_home,
 				getString(R.string.user_information)));
 		drawerItems.add(new DrawerItem(android.R.drawable.sym_action_email,
-				getString(R.string.emails)));
+				getString(R.string.messages)));
 		drawerItems.add(new DrawerItem(R.drawable.ic_menu_archive,
 				getString(R.string.file_storage)));
 		drawerItems.add(new DrawerItem(R.drawable.ic_menu_mark,
@@ -230,8 +230,8 @@ public class MainActivity extends SherlockFragmentActivity {
 				bundle.putInt("iconRes", R.drawable.ic_menu_home);
 				break;
 			case 1:
-				fragment = new FragmentEmails();
-				bundle.putString("title", getString(R.string.emails));
+				fragment = new FragmentMessages();
+				bundle.putString("title", getString(R.string.messages));
 				bundle.putInt("iconRes", android.R.drawable.sym_action_email);
 				break;
 			case 2:

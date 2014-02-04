@@ -4,7 +4,7 @@
     <string name="title_activity_login">Anmeldung</string>
     <string name="title_activity_recipients">Empfänger</string>
     <string name="title_activity_settings">Einstellungen</string>
-    <string name="emails">E-Mails</string>
+    <string name="messages">Nachrichten</string>
     <string name="drawer_open">Menü öffnen</string>
     <string name="drawer_close">Menü schließen</string>
     <string name="search">Suchen</string>
@@ -19,7 +19,6 @@
     <string name="missing_password">Passwort fehlt</string>
     <string name="attachment_add">Anhang hinzufügen</string>
     <string name="app_name">WAK-SH Client</string>
-    <string name="email">E-Mail</string>
     <string name="password">Passwort</string>
     <string name="sign_in">Anmelden</string>
     <string name="login_progress_signing_in">Anmeldung läuft&#8230;</string>
@@ -50,9 +49,9 @@
     <string name="fetching_message">Hole Nachrichtendaten&#8230;</string>
     <string name="answer">Antworten</string>
     <string name="to">An</string>
-    <string name="email_write">E-Mail schreiben</string>
-    <string name="email_send">E-Mail senden</string>
-    <string name="email_send_process">Sende E-Mail&#8230;</string>
+    <string name="message_write">Nachricht schreiben</string>
+    <string name="message_send">Nachricht senden</string>
+    <string name="message_send_process">Sende Nachricht&#8230;</string>
     <string name="fetching_grades">Hole Noten&#8230;</string>
     <string name="average">Durchschnitt:</string>
     <string name="credits">Credits</string>

@@ -12,9 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import de.wak_sh.client.R;
-import de.wak_sh.client.model.Email;
+import de.wak_sh.client.model.Message;
 
-public class AdapterEmails extends ArrayAdapter<Email> {
+public class AdapterMessages extends ArrayAdapter<Message> {
 
 	private static class ViewHolder {
 		public ImageView imageAttachment;
@@ -23,7 +23,7 @@ public class AdapterEmails extends ArrayAdapter<Email> {
 		public TextView textSubject;
 	}
 
-	public AdapterEmails(Context context, List<Email> objects) {
+	public AdapterMessages(Context context, List<Message> objects) {
 		super(context, 0, objects);
 	}
 
@@ -32,7 +32,7 @@ public class AdapterEmails extends ArrayAdapter<Email> {
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.list_item_email, parent,
+			convertView = inflater.inflate(R.layout.list_item_message, parent,
 					false);
 
 			ViewHolder holder = new ViewHolder();
@@ -48,14 +48,14 @@ public class AdapterEmails extends ArrayAdapter<Email> {
 			convertView.setTag(holder);
 		}
 
-		Email email = getItem(position);
+		Message message = getItem(position);
 
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		holder.textFrom.setText(Html.fromHtml(email.getFrom()));
-		holder.textDate.setText(email.getDate());
-		holder.textSubject.setText(Html.fromHtml(email.getSubject()));
+		holder.textFrom.setText(Html.fromHtml(message.getFrom()));
+		holder.textDate.setText(message.getDate());
+		holder.textSubject.setText(Html.fromHtml(message.getSubject()));
 
-		if (!email.isRead()) {
+		if (!message.isRead()) {
 			holder.textFrom.setTypeface(null, Typeface.BOLD);
 			holder.textSubject.setTypeface(null, Typeface.BOLD);
 			holder.textDate.setTypeface(null, Typeface.BOLD);
@@ -65,7 +65,7 @@ public class AdapterEmails extends ArrayAdapter<Email> {
 			holder.textDate.setTypeface(null, Typeface.NORMAL);
 		}
 
-		if (email.hasAttachment()) {
+		if (message.hasAttachment()) {
 			holder.imageAttachment.setVisibility(View.VISIBLE);
 		} else {
 			holder.imageAttachment.setVisibility(View.GONE);

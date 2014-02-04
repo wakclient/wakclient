@@ -6,7 +6,7 @@
         android:icon="@android:drawable/ic_menu_send"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/email_send"/>
+        android:title="@string/message_send"/>
     <item
         android:id="@+id/action_add_attachment"
         android:icon="@drawable/ic_menu_attachment"

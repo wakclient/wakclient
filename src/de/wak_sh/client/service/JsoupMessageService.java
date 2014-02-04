@@ -14,33 +14,33 @@ import org.jsoup.nodes.Element;
 
 import de.wak_sh.client.backend.Utils;
 import de.wak_sh.client.model.Attachment;
-import de.wak_sh.client.model.Email;
+import de.wak_sh.client.model.Message;
 import de.wak_sh.client.model.Recipient;
-import de.wak_sh.client.service.listeners.EmailService;
+import de.wak_sh.client.service.listeners.MessageService;
 
-public final class JsoupEmailService implements EmailService {
+public final class JsoupMessageService implements MessageService {
 
-	private static JsoupEmailService emailService;
+	private static JsoupMessageService messageService;
 
 	private JsoupDataService dataService;
 
-	private JsoupEmailService() {
+	private JsoupMessageService() {
 		dataService = JsoupDataService.getInstance();
 	}
 
-	public static JsoupEmailService getInstance() {
-		if (emailService == null) {
-			emailService = new JsoupEmailService();
+	public static JsoupMessageService getInstance() {
+		if (messageService == null) {
+			messageService = new JsoupMessageService();
 		}
-		return emailService;
+		return messageService;
 	}
 
 	@Override
-	public void sendEmail(Email email, List<Recipient> recipients) {
+	public void sendMessage(Message message, List<Recipient> recipients) {
 		// TODO: Implement
 		Map<String, String> data = new HashMap<String, String>();
-		data.put("subject", email.getSubject());
-		data.put("body", email.getMessage());
+		data.put("subject", message.getSubject());
+		data.put("body", message.getMessage());
 	}
 
 	@Override
@@ -91,19 +91,19 @@ public final class JsoupEmailService implements EmailService {
 	}
 
 	@Override
-	public Email getEmailContent(Email email) throws IOException {
+	public Message getMessageContent(Message message) throws IOException {
 		Connection conn = dataService.connect(JsoupDataService.BASE_URL
 				+ "/c_email.html?&action=getviewmessagessingle&msg_uid="
-				+ email.getId(), Connection.Method.GET, true);
+				+ message.getId(), Connection.Method.GET, true);
 
 		Response response = dataService.fetchPage(conn);
 
 		String regexMessage = "Nachricht:.+?<td>(.*?)</td>";
 		String regexAttachments = "<a href=\"index\\.php.*?&a=(\\d+).*?\".*?&nbsp;(.*?)</a";
-		String message = Utils.matchAll(regexMessage, response.body()).get(0)
+		String content = Utils.matchAll(regexMessage, response.body()).get(0)
 				.group(1);
 
-		email.setMessage(message);
+		message.setMessage(content);
 
 		List<MatchResult> matchResults = Utils.matchAll(regexAttachments,
 				response.body());
@@ -111,15 +111,15 @@ public final class JsoupEmailService implements EmailService {
 			long id = Long.parseLong(matchResult.group(1));
 			String name = matchResult.group(2);
 
-			email.getAttachments().add(new Attachment(id, name));
+			message.getAttachments().add(new Attachment(id, name));
 		}
 
-		return email;
+		return message;
 	}
 
 	@Override
-	public List<Email> getEmails() throws IOException {
-		List<Email> emails = new ArrayList<Email>();
+	public List<Message> getMessages() throws IOException {
+		List<Message> messages = new ArrayList<Message>();
 
 		Connection conn = dataService.connect(JsoupDataService.BASE_URL
 				+ "/c_email.html", Connection.Method.GET, true);
@@ -137,10 +137,10 @@ public final class JsoupEmailService implements EmailService {
 			String date = matchResult.group(6);
 			String from = matchResult.group(7);
 
-			emails.add(new Email(id, from, subject, null, date, read,
+			messages.add(new Message(id, from, subject, null, date, read,
 					attachment));
 		}
 
-		return emails;
+		return messages;
 	}
 }

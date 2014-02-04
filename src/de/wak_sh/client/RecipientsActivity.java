@@ -22,7 +22,7 @@ import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.backend.SelectionDialogRecipient;
 import de.wak_sh.client.backend.SelectionDialogRecipient.OnRecipientSelectedListener;
 import de.wak_sh.client.model.Recipient;
-import de.wak_sh.client.service.JsoupEmailService;
+import de.wak_sh.client.service.JsoupMessageService;
 
 public class RecipientsActivity extends SherlockFragmentActivity implements
 		OnQueryTextListener, OnRecipientSelectedListener {
@@ -101,7 +101,7 @@ public class RecipientsActivity extends SherlockFragmentActivity implements
 		@Override
 		protected List<Recipient> doInBackground(String... params) {
 			try {
-				return JsoupEmailService.getInstance().getRecipients(params[0]);
+				return JsoupMessageService.getInstance().getRecipients(params[0]);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;

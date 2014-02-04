@@ -22,11 +22,12 @@ import com.actionbarsherlock.view.MenuItem;
 import de.wak_sh.client.R;
 import de.wak_sh.client.backend.DataStorage;
 import de.wak_sh.client.backend.ProgressTask;
-import de.wak_sh.client.fragments.backend.AdapterEmails;
-import de.wak_sh.client.model.Email;
-import de.wak_sh.client.service.JsoupEmailService;
+import de.wak_sh.client.fragments.backend.AdapterMessages;
+import de.wak_sh.client.model.Message;
+import de.wak_sh.client.service.JsoupMessageService;
 
-public class FragmentEmails extends WakFragment implements OnItemClickListener {
+public class FragmentMessages extends WakFragment implements
+		OnItemClickListener {
 
 	private DataStorage mStorage = DataStorage.getInstance();
 
@@ -35,14 +36,14 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_emails, container,
+		View rootView = inflater.inflate(R.layout.fragment_messages, container,
 				false);
 
 		mListView = (ListView) rootView.findViewById(android.R.id.list);
 		mListView.setOnItemClickListener(this);
 
-		if (mStorage.getEmails().isEmpty()) {
-			new EmailTask(getActivity(), null,
+		if (mStorage.getMessages().isEmpty()) {
+			new MessagesTask(getActivity(), null,
 					getString(R.string.fetching_messages)).execute();
 		} else {
 			updateViews();
@@ -55,16 +56,16 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.emails, menu);
+		inflater.inflate(R.menu.messages, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// if (item.getItemId() == R.id.action_write) {
-		// Fragment fragment = new FragmentWriteEmail();
+		// Fragment fragment = new FragmentWriteMessage();
 		//
 		// Bundle bundle = new Bundle();
-		// bundle.putString("title", getString(R.string.email_write));
+		// bundle.putString("title", getString(R.string.message_write));
 		// bundle.putInt("iconRes", R.drawable.ic_launcher);
 		//
 		// fragment.setArguments(bundle);
@@ -77,14 +78,14 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 		// transaction.commit();
 		//
 		// getSherlockActivity().getSupportActionBar().setTitle(
-		// getString(R.string.email_write));
+		// getString(R.string.message_write));
 		// getSherlockActivity().getSupportActionBar().setIcon(
 		// R.drawable.ic_launcher);
 		//
 		// return true;
 		// } else
 		if (item.getItemId() == R.id.action_refresh) {
-			new EmailTask(getActivity(), null,
+			new MessagesTask(getActivity(), null,
 					getString(R.string.fetching_messages)).execute();
 			return true;
 		}
@@ -92,21 +93,21 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 	}
 
 	private void updateViews() {
-		mListView.setAdapter(new AdapterEmails(getActivity(), mStorage
-				.getEmails()));
+		mListView.setAdapter(new AdapterMessages(getActivity(), mStorage
+				.getMessages()));
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Email email = mStorage.getEmails().get(position);
+		Message message = mStorage.getMessages().get(position);
 
-		Fragment fragment = new FragmentEmail();
+		Fragment fragment = new FragmentMessage();
 
 		Bundle bundle = new Bundle();
-		bundle.putString("title", getString(R.string.email));
+		bundle.putString("title", getString(R.string.message));
 		bundle.putInt("iconRes", R.drawable.ic_launcher);
-		bundle.putSerializable("email", email);
+		bundle.putSerializable("message", message);
 
 		fragment.setArguments(bundle);
 
@@ -118,16 +119,16 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 		transaction.commit();
 	}
 
-	private class EmailTask extends ProgressTask<Void, Void, List<Email>> {
+	private class MessagesTask extends ProgressTask<Void, Void, List<Message>> {
 
-		public EmailTask(Context context, String title, String message) {
+		public MessagesTask(Context context, String title, String message) {
 			super(context, title, message);
 		}
 
 		@Override
-		protected List<Email> doInBackground(Void... params) {
+		protected List<Message> doInBackground(Void... params) {
 			try {
-				return JsoupEmailService.getInstance().getEmails();
+				return JsoupMessageService.getInstance().getMessages();
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
@@ -135,11 +136,11 @@ public class FragmentEmails extends WakFragment implements OnItemClickListener {
 		}
 
 		@Override
-		protected void onPostExecute(List<Email> result) {
+		protected void onPostExecute(List<Message> result) {
 			super.onPostExecute(result);
 
 			if (result != null) {
-				mStorage.setEmails(result);
+				mStorage.setMessages(result);
 				updateViews();
 			}
 		}

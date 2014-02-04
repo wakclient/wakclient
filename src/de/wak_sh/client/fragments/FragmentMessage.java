@@ -16,11 +16,11 @@ import de.wak_sh.client.R;
 import de.wak_sh.client.backend.FileDownloader;
 import de.wak_sh.client.backend.ProgressTask;
 import de.wak_sh.client.model.Attachment;
-import de.wak_sh.client.model.Email;
+import de.wak_sh.client.model.Message;
 import de.wak_sh.client.service.JsoupDataService;
-import de.wak_sh.client.service.JsoupEmailService;
+import de.wak_sh.client.service.JsoupMessageService;
 
-public class FragmentEmail extends WakFragment {
+public class FragmentMessage extends WakFragment {
 
 	private TextView mTextFrom;
 	private TextView mTextDate;
@@ -32,10 +32,10 @@ public class FragmentEmail extends WakFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_email, container,
+		View rootView = inflater.inflate(R.layout.fragment_message, container,
 				false);
 
-		Email email = (Email) getArguments().getSerializable("email");
+		Message message = (Message) getArguments().getSerializable("message");
 
 		mTextFrom = (TextView) rootView.findViewById(R.id.textView_from);
 		mTextDate = (TextView) rootView.findViewById(R.id.textView_date);
@@ -46,8 +46,8 @@ public class FragmentEmail extends WakFragment {
 		mLayoutAttachmentList = (LinearLayout) rootView
 				.findViewById(R.id.layout_attachment_list);
 
-		new EmailTask(getActivity(), null, getString(R.string.fetching_message))
-				.execute(email);
+		new MessageTask(getActivity(), null,
+				getString(R.string.fetching_message)).execute(message);
 
 		setHasOptionsMenu(true);
 
@@ -56,19 +56,19 @@ public class FragmentEmail extends WakFragment {
 
 	// @Override
 	// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	// inflater.inflate(R.menu.emails, menu);
+	// inflater.inflate(R.menu.messages, menu);
 	// }
 
-	private class EmailTask extends ProgressTask<Email, Void, Email> {
+	private class MessageTask extends ProgressTask<Message, Void, Message> {
 
-		public EmailTask(Context context, String title, String message) {
+		public MessageTask(Context context, String title, String message) {
 			super(context, title, message);
 		}
 
 		@Override
-		protected Email doInBackground(Email... params) {
+		protected Message doInBackground(Message... params) {
 			try {
-				return JsoupEmailService.getInstance().getEmailContent(
+				return JsoupMessageService.getInstance().getMessageContent(
 						params[0]);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -77,7 +77,7 @@ public class FragmentEmail extends WakFragment {
 		}
 
 		@Override
-		protected void onPostExecute(final Email result) {
+		protected void onPostExecute(final Message result) {
 			super.onPostExecute(result);
 
 			if (result != null) {

@@ -22,14 +22,14 @@ import com.actionbarsherlock.view.MenuItem;
 import de.wak_sh.client.R;
 import de.wak_sh.client.RecipientsActivity;
 import de.wak_sh.client.backend.ProgressTask;
-import de.wak_sh.client.model.Email;
+import de.wak_sh.client.model.Message;
 import de.wak_sh.client.model.Recipient;
 
-public class FragmentWriteEmail extends WakFragment {
+public class FragmentWriteMessage extends WakFragment {
 
 	private static final int REQUEST_CODE_RECIPIENTS = 1;
 
-	private Email mEmail;
+	private Message mMessage;
 	private List<Recipient> mRecipients = new ArrayList<Recipient>();
 
 	private EditText mEditRecipients;
@@ -37,7 +37,7 @@ public class FragmentWriteEmail extends WakFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_write_email,
+		View rootView = inflater.inflate(R.layout.fragment_write_message,
 				container, false);
 
 		mEditRecipients = (EditText) rootView
@@ -88,15 +88,15 @@ public class FragmentWriteEmail extends WakFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.email_write, menu);
+		inflater.inflate(R.menu.message_write, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_send:
-			new EmailTask(getActivity(), null,
-					getString(R.string.email_send_process)).execute();
+			new MessageTask(getActivity(), null,
+					getString(R.string.message_send_process)).execute();
 			break;
 		case R.id.action_add_attachment:
 
@@ -105,9 +105,9 @@ public class FragmentWriteEmail extends WakFragment {
 		return false;
 	}
 
-	private class EmailTask extends ProgressTask<Void, Void, Void> {
+	private class MessageTask extends ProgressTask<Void, Void, Void> {
 
-		public EmailTask(Context context, String title, String message) {
+		public MessageTask(Context context, String title, String message) {
 			super(context, title, message);
 		}
 
