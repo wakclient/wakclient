@@ -130,8 +130,7 @@ public final class JsoupEmailService implements EmailService {
 				+ "single&amp;msg_uid=(\\d+).*?\">(.*?)<.*?<td>(.*?)</td>.*?<td>(.*?)&";
 		List<MatchResult> matchResults = Utils.matchAll(regex, doc.html());
 		for (MatchResult matchResult : matchResults) {
-			// TODO: Fix read/unread
-			boolean read = matchResult.group(2) != null;
+			boolean read = matchResult.group(2) == null;
 			boolean attachment = matchResult.group(3) != null;
 			long id = Long.parseLong(matchResult.group(4));
 			String subject = matchResult.group(5);

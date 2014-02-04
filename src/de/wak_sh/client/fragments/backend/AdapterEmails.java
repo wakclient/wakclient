@@ -3,6 +3,7 @@ package de.wak_sh.client.fragments.backend;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,16 @@ public class AdapterEmails extends ArrayAdapter<Email> {
 		holder.textFrom.setText(Html.fromHtml(email.getFrom()));
 		holder.textDate.setText(email.getDate());
 		holder.textSubject.setText(Html.fromHtml(email.getSubject()));
+
+		if (!email.isRead()) {
+			holder.textFrom.setTypeface(null, Typeface.BOLD);
+			holder.textSubject.setTypeface(null, Typeface.BOLD);
+			holder.textDate.setTypeface(null, Typeface.BOLD);
+		} else {
+			holder.textFrom.setTypeface(null, Typeface.NORMAL);
+			holder.textSubject.setTypeface(null, Typeface.NORMAL);
+			holder.textDate.setTypeface(null, Typeface.NORMAL);
+		}
 
 		if (email.hasAttachment()) {
 			holder.imageAttachment.setVisibility(View.VISIBLE);
