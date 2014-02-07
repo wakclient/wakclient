@@ -104,6 +104,7 @@ public final class JsoupMessageService implements MessageService {
 				.group(1);
 
 		message.setMessage(content);
+		message.setRead(true);
 
 		List<MatchResult> matchResults = Utils.matchAll(regexAttachments,
 				response.body());
