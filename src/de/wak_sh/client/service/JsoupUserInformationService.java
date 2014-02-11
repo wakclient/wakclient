@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.MatchResult;
 
+import org.jsoup.Connection;
+import org.jsoup.Connection.Method;
+import org.jsoup.Connection.Response;
+
 import de.wak_sh.client.backend.Utils;
 import de.wak_sh.client.model.UserInformation;
 import de.wak_sh.client.service.listeners.UserInformationService;
@@ -32,6 +36,17 @@ public class JsoupUserInformationService implements UserInformationService {
 				.getModulesPage().html());
 
 		regex = "<a.*?>(BA.*?)</a>";
+
+		if (matchResults.size() == 0) {
+			Connection conn = dataService.connect(JsoupDataService.BASE_URL
+					+ "/432.html", Method.GET, true);
+			Response response = dataService.fetchPage(conn);
+
+			regex = "Hallo&nbsp;(.+?)</b>";
+			String name = Utils.match(regex, response.body());
+
+			return new UserInformation(name, null, null);
+		}
 
 		String name = matchResults.get(0).group(1);
 		String studentNumber = matchResults.get(0).group(2);

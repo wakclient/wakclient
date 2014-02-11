@@ -57,8 +57,14 @@ public class FragmentModules extends WakFragment {
 			average += module.getCredits() * module.getRelevantGrade();
 		}
 
-		mTextCredits.setText("" + credits);
-		mTextAverage.setText("" + (average / credits));
+		if (credits == 0) {
+			mTextCredits.setText("Keine Angabe");
+			mTextAverage.setText("Keine Angabe");
+		} else {
+			mTextCredits.setText("" + credits);
+			mTextAverage.setText(""
+					+ String.format("%.2f", (average / credits)));
+		}
 	}
 
 	private class ModulesTask extends ProgressTask<Void, Void, List<Module>> {

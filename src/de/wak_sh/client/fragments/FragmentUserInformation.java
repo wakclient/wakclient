@@ -57,18 +57,26 @@ public class FragmentUserInformation extends WakFragment {
 
 	private void updateViews() {
 		UserInformation userInformation = mStorage.getUserInformation();
+
+		String studentGroup = userInformation.getStudentGroup() == null ? "Keine Angabe"
+				: userInformation.getStudentGroup();
+		String studentNumber = userInformation.getStudentNumber() == null ? "Keine Angabe"
+				: userInformation.getStudentNumber();
+
 		mTextUsername.setText(userInformation.getName());
-		mTextStudentGroup.setText(userInformation.getStudentGroup());
-		mTextStudentNumber.setText(userInformation.getStudentNumber());
+		mTextStudentGroup.setText(studentGroup);
+		mTextStudentNumber.setText(studentNumber);
 
-		String study = "";
+		String study = "Keine Angabe";
 
-		if (userInformation.getStudentGroup().contains("WINF")) {
-			study = "Wirtschaftsinformatik";
-		} else if (userInformation.getStudentGroup().contains("WING")) {
-			study = "Wirtschaftsingenieurwesen";
-		} else {
-			study = "Betriebswirtschaft";
+		if (!studentGroup.equals("Keine Angabe")) {
+			if (studentGroup.contains("WINF")) {
+				study = "Wirtschaftsinformatik";
+			} else if (studentGroup.contains("WING")) {
+				study = "Wirtschaftsingenieurwesen";
+			} else {
+				study = "Betriebswirtschaft";
+			}
 		}
 
 		mTextStudy.setText(study);

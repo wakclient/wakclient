@@ -2,6 +2,10 @@ package de.wak_sh.client;
 
 import java.io.IOException;
 
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +28,6 @@ import com.actionbarsherlock.app.SherlockActivity;
 
 import de.wak_sh.client.backend.DataStorage;
 import de.wak_sh.client.backend.ProgressTask;
-import de.wak_sh.client.model.LoginResult;
 import de.wak_sh.client.service.JsoupDataService;
 
 public class LoginActivity extends SherlockActivity {
@@ -125,8 +128,8 @@ public class LoginActivity extends SherlockActivity {
 		}
 	}
 
-	private class LoginTask extends AsyncTask<Void, Void, LoginResult>
-			implements OnCancelListener {
+	private class LoginTask extends AsyncTask<Void, Void, Response> implements
+			OnCancelListener {
 
 		private ProgressDialog mProgressDialog;
 
@@ -141,7 +144,7 @@ public class LoginActivity extends SherlockActivity {
 		}
 
 		@Override
-		protected LoginResult doInBackground(Void... arg0) {
+		protected Response doInBackground(Void... arg0) {
 			try {
 				return mDataService.login(mEmail, mPassword);
 			} catch (IOException e) {
@@ -151,14 +154,35 @@ public class LoginActivity extends SherlockActivity {
 		}
 
 		@Override
-		protected void onPostExecute(LoginResult result) {
+		protected void onPostExecute(Response result) {
 			mLoginTask = null;
 
 			if (mProgressDialog != null && mProgressDialog.isShowing()) {
 				mProgressDialog.dismiss();
 			}
 
-			if (result.isLoggedIn()) {
+			boolean loggedIn = true;
+
+			System.out.println(result.body());
+			Document doc = Jsoup.parse(result.body());
+
+			if (doc.toString().contains("Anmeldefehler")) {
+				loggedIn = false;
+				Toast.makeText(LoginActivity.this,
+						"Benutzername oder Passwort falsch", Toast.LENGTH_LONG)
+						.show();
+				mEditTextPassword.requestFocus();
+			} else if (doc.toString().contains("gesperrt")) {
+				loggedIn = false;
+				Toast.makeText(LoginActivity.this,
+						"Account wurde für 1 Stunde gesperrt",
+						Toast.LENGTH_LONG).show();
+				mEditTextPassword.requestFocus();
+			}
+
+			mDataService.setLoggedIn(loggedIn);
+
+			if (loggedIn) {
 				SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 				SharedPreferences.Editor editor = prefs.edit();
 				editor.putString("email", mEmail);
@@ -169,10 +193,6 @@ public class LoginActivity extends SherlockActivity {
 						MainActivity.class);
 				startActivity(intent);
 				finish();
-			} else {
-				Toast.makeText(LoginActivity.this, result.getErrorMessage(),
-						Toast.LENGTH_LONG).show();
-				mEditTextPassword.requestFocus();
 			}
 		}
 

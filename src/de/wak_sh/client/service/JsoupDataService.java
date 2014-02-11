@@ -15,7 +15,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import de.wak_sh.client.backend.Utils;
-import de.wak_sh.client.model.LoginResult;
 
 public final class JsoupDataService {
 
@@ -40,8 +39,7 @@ public final class JsoupDataService {
 		return dataService;
 	}
 
-	public LoginResult login(String username, String password)
-			throws IOException {
+	public Response login(String username, String password) throws IOException {
 		this.username = username;
 		this.password = password;
 
@@ -66,21 +64,23 @@ public final class JsoupDataService {
 
 		conn = connect(BASE_URL + "/community-login.html",
 				Connection.Method.GET, false);
+		Response response = conn.data(map).execute();
 
-		doc = conn.data(map).execute().parse();
+		// doc = conn.data(map).execute().parse();
+		//
+		// if (doc.toString().contains("Anmeldefehler")) {
+		// loggedIn = false;
+		// return new LoginResult("Benutzername oder Passwort falsch");
+		// } else if (doc.toString().contains("gesperrt")) {
+		// loggedIn = false;
+		// return new LoginResult("Account wurde gesperrt");
+		// }
 
-		if (doc.toString().contains("Anmeldefehler")) {
-			loggedIn = false;
-			return new LoginResult("Benutzername oder Passwort falsch");
-		} else if (doc.toString().contains("gesperrt")) {
-			loggedIn = false;
-			return new LoginResult("Account wurde gesperrt");
-		}
+		cookie = response.cookies().get(COOKIE_NAME);
+		// loggedIn = true;
 
-		cookie = conn.response().cookies().get(COOKIE_NAME);
-		loggedIn = true;
-
-		return new LoginResult();
+		// return new LoginResult();
+		return conn.response();
 	}
 
 	public void logout() throws IOException {
@@ -108,6 +108,10 @@ public final class JsoupDataService {
 			response = conn.execute();
 		}
 		return response;
+	}
+
+	public void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
 	}
 
 	public boolean isLoggedIn() {
